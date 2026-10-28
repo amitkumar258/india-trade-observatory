@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://indiatradeobservatory.amitkumar-ak.com/sitemap.xml
