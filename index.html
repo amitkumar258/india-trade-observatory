@@ -608,12 +608,12 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .basis-box .legend b { font-weight: 600; text-align: right; white-space: nowrap; }
 
 /* Funnel: the method in one picture */
-.funnel { display: grid; gap: 10px; margin: 30px 0 6px; }
+.funnel { display: grid; gap: 14px; margin: 30px 0 6px; }
 .fn-row { display: grid; grid-template-columns: 230px minmax(0, 1fr); align-items: center; color: inherit; text-decoration: none; }
 .fn-row:hover .fn-num b { color: var(--wine); }
 .fn-tag { text-align: right; padding-right: 18px; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-50); }
 .fn-track { display: flex; align-items: center; gap: 14px; min-width: 0; }
-.fn-bar { height: 46px; flex: none; width: calc(var(--w) * 0.68%); }
+.fn-bar { height: 24px; flex: none; width: calc(var(--w) * 0.68%); }
 .fn-num { display: flex; flex-direction: column; min-width: 0; }
 .fn-num b { font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: -0.4px; }
 .fn-num span { font-size: 13.5px; color: var(--ink-70); }
@@ -700,7 +700,7 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
   .fn-num b { font-size: 21px; }
   .fn-bar { width: calc(var(--w) * 0.42%); }
   .fn-num span { font-size: 12.5px; }
-  .fn-bar { height: 34px; }
+  .fn-bar { height: 18px; }
   .fn-step3 { margin-left: 0; }
   .vstrip { grid-template-columns: 1fr 1fr; }
 }
@@ -1308,7 +1308,7 @@ const CH_RENDER = [
         ${row(g.passed, 'would cause a meaningful disruption', 'Step 2 · Scale of disruption', '#94100c', 3)}
         ${row(g.vul, `potentially render India strategically or critically vulnerable: ${int(s.crit)} critical, ${int(s.strat)} strategic`, 'Step 2 · Duration of disruption', '#4a0a2d', 5)}
         <p class="fn-step3">Set aside at this step: ${int(s.n.opp)} items of ${term('opp', 'low-complexity dependence')}, which India can more easily buy elsewhere as part of ${term('derisking', 'de-risking')}, and ${int(s.n.na)} items ${term('na', 'not yet assessed')} because they have no PCI score.</p>
-        <p class="fn-step3">Step 3 · The ${int(g.vul)} ${term('strategic', 'strategic')} and ${term('critical', 'critical')} items go forward to the qualitative ${term('scv', 'SCV tests')}. Of the ${int(g.passed)} items above both thresholds, ${int(g.passedItems.filter(i => i.ns).length)} are in ${term('nsflag', 'national-security sectors')}, which the SCV framework may treat as critical whatever their PCI. <a href="#methodology?s=scv">How the tests work</a></p>
+        <p class="fn-step3">Step 3 · The ${int(g.vul)} ${term('strategic', 'strategic')} and ${term('critical', 'critical')} items go forward to the qualitative ${term('scv', 'SCV tests')}. Of the ${int(g.passed)} items that pass both filters, ${int(g.passedItems.filter(i => i.ns).length)} are in ${term('nsflag', 'national-security sectors')}, which the SCV framework may treat as critical whatever their PCI. <a href="#methodology?s=scv">How the tests work</a></p>
       </div>
       <div class="cta"><a class="btn primary" href="#overview?ch=1">Start: ${CHAPTERS[1].t} →</a><a class="btn" href="#overview?ch=5">Skip to the verdict</a></div>`;
   },
