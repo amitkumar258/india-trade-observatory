@@ -42,7 +42,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <!-- GoatCounter: privacy-friendly visit counts, no cookies (stats at amitkumar-ak.goatcounter.com) -->
 <script data-goatcounter="https://amitkumar-ak.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -573,9 +573,9 @@ ol.mini .m-sub { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-50); }
 .side-select { display: none; }
 
 .kicker { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wine); font-weight: 600; margin: 0 0 8px; }
-.chapter h1, .sec-page h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.2; margin-bottom: 12px; }
+.chapter h1, .sec-page h1 { font-size: 30px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
 .st-wrap { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; max-width: 900px; margin: 6px 0 18px; }
-.st-num { font-size: 76px; font-weight: 700; line-height: 0.9; color: var(--wine); letter-spacing: -2px; }
+.st-num { font-size: 76px; font-weight: 650; line-height: 0.9; color: var(--wine); letter-spacing: -2px; }
 .statement-h { font-size: 23px !important; font-weight: 500; line-height: 1.35 !important; margin: 0; border-left: 3px solid var(--wine); padding-left: 20px; }
 .statement-h .term { text-decoration-thickness: 1px; }
 @media (max-width: 640px) { .st-wrap { grid-template-columns: 1fr; gap: 8px; } .st-num { font-size: 56px; } }
@@ -583,7 +583,7 @@ ol.mini .m-sub { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-50); }
 .ch-grid { display: grid; grid-template-columns: minmax(300px, 410px) minmax(0, 1fr); gap: 52px; align-items: start; }
 .ch-text > p:not(.kicker) { font-size: 15.5px; color: var(--ink-70); margin: 0 0 4px; }
 .figs { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 22px; border-top: 2px solid var(--ink); padding-top: 16px; margin: 22px 0 18px; }
-.figs .fv { font-size: 28px; font-weight: 700; line-height: 1.1; letter-spacing: -0.4px; }
+.figs .fv { font-size: 28px; font-weight: 600; line-height: 1.1; letter-spacing: -0.4px; }
 .figs .fl { font-size: 13px; color: var(--ink-70); margin-top: 3px; line-height: 1.35; }
 .figs .muted .fv { color: var(--ink-50); }
 details.why { border: var(--rule); background: var(--deep); margin: 0 0 14px; }
@@ -615,15 +615,16 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .fn-track { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .fn-bar { height: 46px; flex: none; width: calc(var(--w) * 0.68%); }
 .fn-num { display: flex; flex-direction: column; min-width: 0; }
-.fn-num b { font-size: 26px; line-height: 1; letter-spacing: -0.3px; }
+.fn-num b { font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: -0.4px; }
 .fn-num span { font-size: 13.5px; color: var(--ink-70); }
 .fn-step3 { margin: 4px 0 0 230px; font-size: 13.5px; color: var(--ink-70); }
 
 /* Year columns and the dependence histogram */
 .ycols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: end; margin-top: 8px; }
-.yc { display: flex; flex-direction: column; justify-content: flex-end; }
+.yc { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; text-align: center; }
+.yc .yl, .yc .ys { align-self: stretch; }
 .yc .yv { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.yc .yb { display: block; background: #cfc8c2; }
+.yc .yb { display: block; width: 44px; background: #cfc8c2; }
 .yc.on .yb { background: var(--wine); }
 .yc .yl { font-size: 12.5px; margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--ink); }
 .yc .ys { font-size: 12px; color: var(--ink-50); }
@@ -632,7 +633,7 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .hist { position: relative; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; align-items: end; border-bottom: 1px solid var(--ink); padding-top: 26px; }
 .hb { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
 .hb .hv { font-size: 11.5px; color: var(--ink-70); margin-bottom: 4px; }
-.hb .hbar { display: block; width: 100%; background: #cfc8c2; }
+.hb .hbar { display: block; width: 58%; background: #cfc8c2; }
 .hb.pass .hbar { background: var(--wine); }
 .hline { position: absolute; left: calc(30% - 2px); top: 0; bottom: -32px; border-left: 2px dashed var(--ink); }
 .hline span { position: absolute; left: 6px; top: 0; background: var(--ink); color: #fff; font-size: 11.5px; padding: 3px 7px; white-space: nowrap; }
@@ -642,7 +643,7 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .vstrip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--ink-20); border: var(--rule); margin: 18px 0 22px; }
 .vstrip a { background: var(--paper); padding: 12px 14px 12px; border-top: 4px solid var(--vc); color: inherit; text-decoration: none; display: flex; flex-direction: column; }
 .vstrip a:hover { background: var(--deep); }
-.vstrip .fv { font-size: 24px; font-weight: 700; line-height: 1.1; }
+.vstrip .fv { font-size: 24px; font-weight: 600; line-height: 1.1; }
 .vstrip .fl { font-size: 13.5px; margin-top: 2px; }
 .vstrip .fs { font-size: 12px; color: var(--ink-50); margin-top: 2px; }
 .moves { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
@@ -650,7 +651,7 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .moves h3 span { font-size: 12.5px; font-weight: 400; color: var(--ink-50); }
 
 /* Explorer workspace */
-.ex-head h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.3px; }
+.ex-head h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.3px; }
 .ex-head .lede { font-size: 15px; margin-top: 6px; }
 .ex-top { display: flex; gap: 12px; align-items: stretch; margin: 22px 0 10px; }
 .ex-q { flex: 1; display: flex; align-items: center; gap: 8px; border: 2px solid var(--ink); padding: 0 12px; color: var(--ink-50); cursor: text; }
@@ -757,11 +758,11 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .tr-k { padding: 14px 20px 16px; border-left: 1px solid var(--ink-20); }
 .tr-k:first-child { border-left: 0; padding-left: 0; }
 .tr-kl { font-size: 13px; color: var(--ink-70); margin: 0; min-height: 2.6em; }
-.tr-kv { font-size: 32px; font-weight: 700; color: var(--wine); line-height: 1.1; margin: 2px 0 12px; letter-spacing: -0.5px; }
+.tr-kv { font-size: 32px; font-weight: 600; color: var(--wine); line-height: 1.1; margin: 2px 0 12px; letter-spacing: -0.5px; }
 .tr-kv small { font-size: 15px; color: var(--ink-50); font-weight: 500; letter-spacing: 0; }
 .tr-kb { display: grid; grid-template-columns: 72px minmax(0, 1fr); column-gap: 8px; align-items: center; margin-bottom: 6px; }
 .tr-kb span { font-size: 11px; color: var(--ink-50); grid-row: span 2; white-space: nowrap; }
-.tr-kb i { display: block; height: 14px; }
+.tr-kb i { display: block; height: 8px; }
 .tr-kb b { font-size: 12px; font-weight: 600; margin-top: 2px; }
 .tr-cells { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; max-width: 200px; }
 .tr-cells i { display: block; aspect-ratio: 1; background: var(--ink-10); }
@@ -772,9 +773,9 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .tr-wide { margin-top: 34px; }
 .tr-p h2 { font-size: 18px; margin: 0 0 4px; }
 .tr-imp { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end; }
-.tr-pair { display: flex; gap: 4px; align-items: flex-end; height: 200px; }
-.tr-col { flex: 1; position: relative; }
-.tr-col b { position: absolute; bottom: 100%; left: 0; right: 0; text-align: center; font-size: 10.5px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; }
+.tr-pair { display: flex; gap: 6px; align-items: flex-end; justify-content: center; height: 200px; }
+.tr-col { flex: none; width: 26px; position: relative; }
+.tr-col b { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); text-align: center; font-size: 10.5px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; }
 .tr-yl { display: block; font-size: 12.5px; margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--ink); }
 .tr-ys { display: block; font-size: 11.5px; color: var(--wine); font-weight: 600; white-space: nowrap; }
 .tr-grp { min-width: 0; }
@@ -826,6 +827,21 @@ table.matrix.dmx td.flat b { font-size: 12px; font-weight: 500; }
   .mx-fit table.matrix.dmx td span { display: none; }
   .mx-fit table.matrix.dmx td.flat b { font-size: 0; }
   .mx-fit table.matrix.dmx td.flat b::after { content: '0'; font-size: 12px; }
+}
+/* The wordmark keeps the text cut of Inter; only large headings and figures use the display cut */
+.w1, .w2 { font-optical-sizing: none; }
+/* Matrix corner: a diagonal splits the row label (scale, bottom left) from the column label (duration, top right) */
+table.matrix th.corner { position: relative; padding: 0; min-height: 64px;
+  background: linear-gradient(to top right, transparent calc(50% - 0.75px), rgba(23,20,19,0.6) 50%, transparent calc(50% + 0.75px)), var(--corner); }
+table.matrix th.corner .cx { position: absolute; font-size: 13px; font-weight: 600; line-height: 1.15; white-space: nowrap; }
+table.matrix th.corner .cx small { display: block; font-size: 10px; font-weight: 400; }
+table.matrix th.corner .cx-d { top: 8px; right: 9px; text-align: right; }
+table.matrix th.corner .cx-s { bottom: 8px; left: 9px; text-align: left; }
+@container (max-width: 520px) {
+  .mx-fit table.matrix th.corner .cx { font-size: 10px; }
+  .mx-fit table.matrix th.corner .cx small { font-size: 8.5px; }
+  .mx-fit table.matrix th.corner .cx-d { top: 6px; right: 4px; }
+  .mx-fit table.matrix th.corner .cx-s { bottom: 6px; left: 4px; }
 }
 </style>
 </head>
@@ -900,7 +916,8 @@ function classify(row, y) {
 }
 /*CORE-END*/
 
-const FY = { '2023': 'FY\u00a02022-23', '2024': 'FY\u00a02023-24', '2025': 'FY\u00a02024-25', '2026': 'FY\u00a02025-26' };
+// Non-breaking space and hyphen, so a year label never splits across lines
+const FY = { '2023': 'FY\u00a02022\u201123', '2024': 'FY\u00a02023\u201124', '2025': 'FY\u00a02024\u201125', '2026': 'FY\u00a02025\u201126' };
 const CAT = {
   crit:  { label: 'Critical: Extremely High complexity', short: 'Critical · Extremely High', fill: '#85200c', disr: 'Long-term' },
   vh:    { label: 'Critical: Very High complexity', short: 'Critical · Very High', fill: '#a61c00', disr: 'Medium to Long-term' },
@@ -1318,7 +1335,7 @@ const CH_RENDER = [
       <p>${term('dependence', 'Dependence')} is China's share of India's imports of an item. Items where China supplies 30% or more pass the ${term('depfilter', 'dependence filter')} and go forward. Below that line, India's supply is treated as diversified enough, and the item is set aside.</p>
       ${figs([[int(s.dep30), 'items with 30% or more dependence'], [pct(s.dep30 / g.fromChina * 100), `of the ${int(g.fromChina)} items India imports from China`],
         [int(bins[9]), 'items China supplies almost entirely (90% or more)'], [p ? change(s.dep30, p.dep30, int) : 'n/a', p ? `items compared with ${FY[py]}` : 'earliest year in the Observatory', 'muted']])}
-      ${whyBox('Why 30%?', "<p>China accounts for roughly 30% of global production capacity. If India buys more than 30% of an item from China, it relies on China more than China's share of world production would explain.</p>")}
+      ${whyBox('Why 30%?', "<p>China makes about 30% of the world's manufactured goods, by volume and by value. If India's purchases of an item followed China's weight in world production, about 30% would come from China. A share above 30% means India leans on China more than that weight explains. Below 30%, India already buys most of the item elsewhere, so its supply is treated as diversified. For comparison, India's Competition Act treats a market share above 40% as dominant.</p>")}
       <p class="ch-links"><a href="#explorer?tab=all&tier=30plus">Browse these items in the Explorer →</a><a href="#methodology?s=dependence">Read the method</a></p>
       </div><div class="ch-vis"><p class="vis-t">Items India imports from China, by China's share of India's imports, ${FY[y]}</p><p class="vis-s">Each bar counts items. Wine bars pass the dependence filter. The ${int(g.imported - g.fromChina)} items with no imports from China are left out.</p>
       <div class="hist">${bins.map((v, k) => `<div class="hb${k >= 3 ? ' pass' : ''}"><span class="hv">${int(v)}</span><span class="hbar" style="height:${(v / mx * 280).toFixed(0)}px"></span></div>`).join('')}<span class="hline"><span>30% threshold</span></span></div>
@@ -1332,7 +1349,7 @@ const CH_RENDER = [
       <p>For each of the ${int(s.dep30)} dependent items, the ${term('rif', 'Relative Impact Factor (RIF)')} combines the value of imports from China with the share of dependence. An RIF of 0.01 or more means a cut-off would cause a meaningful disruption. The other ${int(s.dep30 - g.passed)} items are set aside. Of the ${int(g.passed)} items that pass, ${int(g.passedItems.filter(i => i.ns).length)} are in ${term('nsflag', 'national-security sectors')}; the Explorer flags them.</p>
       ${figs([[int(g.passed), 'items would cause a meaningful disruption'], [usd(g.passedV), 'of imports from China in these items'],
         [int(sev.length), 'items with a Severe scale (RIF of 1 or more)'], [pct(sevV / g.passedV * 100), 'of that value sits in Severe items']])}
-      ${whyBox('Why an RIF of 0.01?', '<p>An RIF of 0.01 equals US$1 mn of imports at 100% dependence, or about US$3.3 mn at 30% dependence. Below that level, a cut-off would be too small to cause a meaningful shock.</p>')}
+      ${whyBox('Why an RIF of 0.01?', '<p>HS8 lines are narrow, so a single line can matter even when its value is small. An RIF of 0.01 equals about US$1 mn of imports at 100% dependence, or US$3.3 mn at 30%. Below that, a cut-off would be too small to cause a meaningful shock. The higher tiers are ten times apart: Major starts at 0.1 (about US$10 mn at 100% dependence) and Severe at 1 (about US$100 mn).</p>')}
       <p class="ch-links"><a href="#methodology?s=rif">Read the method</a></p>
       </div><div class="ch-vis">${basisBox(`${term('shock', 'Scale of disruption')} <small>(immediate shock)</small>`, 'Scale of disruption', 'by scale of disruption', shockParts(g), g)}</div></div>`;
   },
@@ -1341,7 +1358,7 @@ const CH_RENDER = [
     const g = glance(y);
     return `<div class="ch-grid"><div class="ch-text">${kick('Step 2 of the method · Duration of disruption')}
       <h1>How long would the disruption last?</h1>
-      <p>The ${term('pci', 'Product Complexity Index (PCI)')} measures how much know-how a product needs. The fewer countries that can make it, the longer a disruption would last before India finds other supply. Short-term means up to 9 months; long-term means more than 18.</p>
+      <p>The ${term('pci', 'Product Complexity Index (PCI)')} measures how much know-how a product needs. The fewer countries that can make it, the longer a disruption would last before India finds other supply. Short-term means up to 9 months, medium-term about 18 months, and long-term more than 27 months.</p>
       ${figs([[pct(s.critV / g.passedV * 100), 'of the value faces a disruption beyond 18 months (PCI 1.75 or more)'], [pct(s.stratV / g.passedV * 100), 'faces a short to medium-term disruption (PCI 1 to 1.75)'],
         [pct(s.v.opp / g.passedV * 100), 'faces the shortest disruption: low complexity, PCI below 1'], [int(s.n.na), 'items not assessed: no PCI score yet', 'muted']])}
       <p class="ch-links"><a href="#methodology?s=pci">Read the method</a></p>
@@ -1387,7 +1404,7 @@ function trendsHTML(y, py, part) {
     const verParts = [['crit', 'Critical', CAT.crit.fill, '#fff'], ['strat', 'Strategic', CAT.high.fill, '#fff'], ['opp', 'Low-complexity dependence', CAT.opp.fill, '#fff'], ['na', 'Not assessed', '#ffffff', 'var(--ink)']];
     // 4b. Change in each matrix cell, first year to last
     const c0 = matrixCells(f), c1 = matrixCells(l);
-    const dmx = `<table class="matrix static dmx"><thead><tr><th class="corner">Scale / Duration<span class="mr">RIF / PCI</span></th>${MATRIX_COLS.map(c => `<th class="m-${c.id}"><span class="mn">${c.name}</span><span class="mr">${c.range}</span></th>`).join('')}</tr></thead><tbody>${
+    const dmx = `<table class="matrix static dmx"><thead><tr><th class="corner" aria-label="Rows: scale of disruption (RIF). Columns: duration of disruption (PCI)."><span class="cx cx-d">Duration<small>PCI →</small></span><span class="cx cx-s">Scale<small>RIF ↓</small></span></th>${MATRIX_COLS.map(c => `<th class="m-${c.id}"><span class="mn">${c.name}</span><span class="mr">${c.range}</span></th>`).join('')}</tr></thead><tbody>${
       RIF_ROWS.map(rw => `<tr><th class="rh" style="background:${rw.fill}">${rw.name}<span class="mr">${rw.range}</span></th>${MATRIX_COLS.map(c => {
         const a = (c0[rw.id + '|' + c.id] || []).length, b = (c1[rw.id + '|' + c.id] || []).length, d = b - a;
         return `<td class="m-${c.id}${d ? '' : ' flat'}"><b>${d > 0 ? '+' : d < 0 ? '−' : ''}${d ? int(Math.abs(d)) : 'no change'}</b><span>${int(a)} → ${int(b)}</span></td>`; }).join('')}</tr>`).join('')}</tbody></table>`;
@@ -1475,7 +1492,7 @@ function matrixHTML() {
     <div>
       <div class="mx-fit">
         <table class="matrix">
-          <thead><tr><th class="corner">Scale / Duration<span class="mr">RIF / PCI</span></th>${head}</tr></thead>
+          <thead><tr><th class="corner" aria-label="Rows: scale of disruption (RIF). Columns: duration of disruption (PCI)."><span class="cx cx-d">Duration<small>PCI →</small></span><span class="cx cx-s">Scale<small>RIF ↓</small></span></th>${head}</tr></thead>
           <tbody>${body}</tbody>
           <tfoot><tr><td></td><td class="span one">Low-complexity dependence</td><td class="span" colspan="3">Strategic vulnerability →</td><td class="span" colspan="2">Critical vulnerability →</td><td class="span one">Not assessed</td></tr></tfoot>
         </table>
@@ -1748,9 +1765,9 @@ const GLOSSARY = [
   ['De-risking', 'Kumar 2025', 'Reducing the strategic cost that dependence on an adversary could impose, without cutting off trade altogether: identifying where dependence amounts to a strategic or critical vulnerability, and building alternatives or domestic capacity there first.'],
   ['Dependence', 'Kumar 2023', 'A situation where one party relies on another to carry out business operations, broadly sales and purchases. Dependence can be buyer-based (downstream) or seller-based (upstream). Its degree or severity can create conditions of vulnerability.'],
   ['Dependence (D), percentage', 'Kumar 2025; Observatory', 'Imports from China as a share of India’s total imports of the same item. Graded Moderate (30 to below 50%), High (50 to below 70%) and Acute (70% and above).'],
-  ['Dependence filter', 'Kumar 2025', 'The first step of the method. Items with dependence on China below 30% are eliminated, since sufficient diversification is assumed to exist. The 30% threshold roughly corresponds to China’s share of global production capacity, by volume and value.'],
-  ['Disruption horizons', 'Kumar 2025', 'Short-term means up to nine months, medium-term nine to eighteen months, and long-term more than eighteen months. When drawn from PCI, these horizons are indicative and suggestive, not forecasts.'],
-  ['Duration of disruption', 'Kumar 2025; Observatory', 'How long a disruption would last before India could substitute the supply, as indicated by the Product Complexity Index: short-term up to nine months (PCI 1 to below 1.25), short to medium-term (1.25 to below 1.5), medium-term (1.5 to below 1.75), medium to long-term (1.75 to below 2) and long-term beyond eighteen months (PCI 2 and above). Below PCI 1, the disruption would be the shortest, because many countries make the product, but switching suppliers still takes some time. These durations are indicative and suggestive: PCI ranks how hard a product is to substitute, it does not forecast actual recovery time.'],
+  ['Dependence filter', 'Kumar 2025', 'The first step of the method. Items where China supplies less than 30% of India\'s imports are set aside. China makes about 30% of the world\'s manufactured goods, so a share above 30% means India leans on China more than China\'s weight in world production explains. Below 30%, India already buys most of the item elsewhere'],
+  ['Disruption horizons', 'Kumar 2025; Kumar 2026', 'Short-term means up to 9 months, medium-term about 18 months, and long-term more than 27 months. In between, short to medium-term runs from 9 to 18 months and medium to long-term from 18 to 27 months. When drawn from PCI, these horizons are indicative, not forecasts.'],
+  ['Duration of disruption', 'Kumar 2025; Kumar 2026; Observatory', 'How long a disruption could last before India finds other supply, as indicated by the Product Complexity Index. Short-term is up to 9 months (PCI 1 to below 1.25). Short to medium-term is 9 to 18 months (1.25 to below 1.5). Medium-term is about 18 months (1.5 to below 1.75). Medium to long-term is 18 to 27 months (1.75 to below 2). Long-term is over 27 months (PCI 2 and above). Below PCI 1, many countries make the product, so the disruption would be the shortest, though switching suppliers still takes some time. These durations are indicative: PCI ranks how hard a product is to replace; it does not forecast recovery time.'],
   ['Geoeconomics', 'Kumar 2023', 'The geostrategic use of economic power: using economic strength to pursue geostrategic interests. Geoeconomic interests are connected with resource management and the inclusion of resources into national economies.'],
   ['Geopolitics', 'Kumar 2023', 'The use of political tools to further geostrategic or national power or interests. Geopolitical interests are connected with the direct or indirect control of territories that contain resources.'],
   ['Geostrategic', 'Kumar 2023', 'The strategic approach specific to international relations: the interplay of geography (loosely, nations or states) and strategy. Geopolitics and geoeconomics are its two constituents.'],
@@ -1807,8 +1824,8 @@ const METH = [
       </div>` },
   { id: 'dependence', g: 'The method', t: 'Step 1: Dependence filter', s: 'Step 1: Dependence', h: () => `
       <p>Dependence (D) is the share of India's imports of a line that comes from China.</p>
-      <p>The filter is set at 30%. China accounts for roughly 30% of global production capacity, by both volume and value. If India buys more than 30% of a line from China, it relies on China more than China's share of world production would explain. Below 30%, India's supply is treated as diversified enough, and the line is set aside.</p>
-      <p>Lines at 30% or above are graded as follows.</p>
+      <p>The filter is set at 30%. China makes about 30% of the world's manufactured goods, by volume and by value. If India's purchases of an item followed China's weight in world production, about 30% would come from China. A share above 30% means India leans on China more than that weight explains. Below 30%, India already buys most of the item elsewhere, so its supply is treated as diversified. For comparison, India's Competition Act treats a market share above 40% as dominant. Lines below 30% are set aside.</p>
+      <p>Lines at 30% or above are graded in equal steps of 20 percentage points.</p>
       <div class="scroll-x keytable"><table class="data"><thead><tr><th>Dependence category</th><th>Range</th></tr></thead><tbody>
         <tr><td>Moderate</td><td class="mono">30 ≤ D &lt; 50</td></tr>
         <tr><td>High</td><td class="mono">50 ≤ D &lt; 70</td></tr>
@@ -1821,8 +1838,9 @@ const METH = [
       <p><span class="formula">RIF = Imports from China (US$ mn) × Dependence (%) ÷ 10,000</span></p>
       <p>Dividing by 10,000 only keeps the numbers small. RIF is a relative measure: it shows how the shock compares across lines, not its absolute size. It does not capture knock-on effects.</p>
       <p>RIF lets lines with very different values and dependence be compared. For example, a line with 100% dependence but US$10 mn of imports ranks below a line with 75% dependence and US$50 mn of imports. The second line touches a larger part of the economy.</p>
-      <p>A larger RIF is assumed to mean wider effects on consumers and on other industries. RIF is therefore the closest measure of the incidence and cascading tests.</p>
-      <p>Lines with an RIF below 0.01 are set aside as too small to matter. An RIF of 0.01 equals US$1 mn of imports at 100% dependence, or about US$3.3 mn at 30% dependence. Lines at or above 0.01 fall into three tiers.</p>
+      <p>A larger RIF is assumed to mean wider effects on consumers and on other industries. RIF is the closest available stand-in for the incidence and cascading tests.</p>
+      <p>HS8 lines are narrow, so a single line can matter even when its value is small. The cut-off at 0.01 keeps every line worth about US$1 mn or more of fully dependent imports, and sets aside only the smallest. Above it, each tier is ten times the one before:</p>
+      <ul><li><strong>Substantial (0.01):</strong> about US$1 mn of imports at 100% dependence, or US$3.3 mn at 30%.</li><li><strong>Major (0.1):</strong> about US$10 mn at 100% dependence, or US$33 mn at 30%.</li><li><strong>Severe (1):</strong> about US$100 mn at 100% dependence, or US$333 mn at 30%.</li></ul>
       <div class="scroll-x keytable"><table class="data"><thead><tr><th>Impact factor</th><th>Range</th></tr></thead><tbody>
         <tr><td><span class="sw" style="background:#d9d9d9"></span>Insignificant (set aside)</td><td class="mono">RIF &lt; 0.01</td></tr>
         <tr><td><span class="sw" style="background:#cc0000"></span>Substantial</td><td class="mono">0.01 ≤ RIF &lt; 0.1</td></tr>
@@ -1836,13 +1854,14 @@ const METH = [
       <p>Scores come from the Observatory of Economic Complexity, at HS6 level (HS 2022 series, 2024). Each HS8 line takes the score of its HS6 code. A line whose HS6 code has no score is marked <strong>Not assessed</strong> until a score is found.</p>
       <p>PCI indicates how long a disruption could last. The At a Glance page calls it <strong>duration of disruption</strong>. A product with a high PCI is hard to replace. Building new capacity takes heavy investment and know-how, and few other suppliers exist. A product with a low PCI is easier to replace. New capacity is cheaper, and the know-how is widespread, so alternatives can appear quickly.</p>
       <div class="scroll-x keytable"><table class="data"><thead><tr><th>Complexity</th><th>Range</th><th>Substitutability / disruption (indicative)</th></tr></thead><tbody>
-        <tr><td>${swatch('low')}Mild</td><td class="mono">1 ≤ PCI &lt; 1.25</td><td>Short-term</td></tr>
-        <tr><td>${swatch('mod')}Moderate</td><td class="mono">1.25 ≤ PCI &lt; 1.5</td><td>Short to medium-term</td></tr>
-        <tr><td>${swatch('high')}High</td><td class="mono">1.5 ≤ PCI &lt; 1.75</td><td>Medium-term</td></tr>
-        <tr><td>${swatch('vh')}Very High</td><td class="mono">1.75 ≤ PCI &lt; 2</td><td>Medium to long-term</td></tr>
-        <tr><td>${swatch('crit')}Extremely High</td><td class="mono">PCI ≥ 2</td><td>Long-term</td></tr>
+        <tr><td>${swatch('low')}Mild</td><td class="mono">1 ≤ PCI &lt; 1.25</td><td>Short-term: up to 9 months</td></tr>
+        <tr><td>${swatch('mod')}Moderate</td><td class="mono">1.25 ≤ PCI &lt; 1.5</td><td>Short to medium-term: 9 to 18 months</td></tr>
+        <tr><td>${swatch('high')}High</td><td class="mono">1.5 ≤ PCI &lt; 1.75</td><td>Medium-term: about 18 months</td></tr>
+        <tr><td>${swatch('vh')}Very High</td><td class="mono">1.75 ≤ PCI &lt; 2</td><td>Medium to long-term: 18 to 27 months</td></tr>
+        <tr><td>${swatch('crit')}Extremely High</td><td class="mono">PCI ≥ 2</td><td>Long-term: over 27 months</td></tr>
       </tbody></table></div>
-      <p class="cap">Based on Kumar (2025), Table 3. Short-term is up to nine months, medium-term nine to eighteen months, and long-term more than eighteen months.</p>
+      <p class="cap">Based on Kumar (2025), Table 3, and Kumar (2026), Table 3.2.</p>
+      <p>Below a PCI of 1, many countries make the product, so India can usually find other suppliers. These lines fail the substitutability test, so they are not strategic. Above 1, the scale is cut into equal steps of 0.25, from Mild to Extremely High. Each step up means fewer producers and a longer disruption.</p>
       <div class="callout"><strong>These durations are indicative.</strong> PCI shows how widely the know-how to make a product is spread. That makes it a good guide to how hard the product is to replace. It does not show how long India would actually take to find new suppliers or build capacity. That also depends on stocks, contracts, investment, regulation and policy. Read the durations as a ranking of how hard products are to replace, not as forecasts.</div>` },
   { id: 'matrix', g: 'The method', t: 'The RIF-PCI matrix', s: 'The matrix', h: () => {
     const t4cols = MATRIX_COLS.filter(c => c.id !== 'na');
@@ -1857,7 +1876,7 @@ const METH = [
       </ul>
       <div class="mx-fit keytable">
         <table class="matrix static">
-          <thead><tr><th class="corner">Scale / Duration<span class="mr">RIF / PCI</span></th>${t4cols.map(c => `<th class="m-${c.id}"><span class="mn">${c.name}</span><span class="mr">${c.range}</span></th>`).join('')}</tr></thead>
+          <thead><tr><th class="corner" aria-label="Rows: scale of disruption (RIF). Columns: duration of disruption (PCI)."><span class="cx cx-d">Duration<small>PCI →</small></span><span class="cx cx-s">Scale<small>RIF ↓</small></span></th>${t4cols.map(c => `<th class="m-${c.id}"><span class="mn">${c.name}</span><span class="mr">${c.range}</span></th>`).join('')}</tr></thead>
           <tbody>${t4}</tbody>
           <tfoot><tr><td></td><td class="span one">Low-complexity dependence</td><td class="span" colspan="3">Strategic vulnerability →</td><td class="span" colspan="2">Critical vulnerability →</td></tr></tfoot>
         </table>
@@ -1889,7 +1908,7 @@ const METH = [
           <td>A vulnerability that an adversary could exploit for strategic ends, through economic coercion, with likely geopolitical or geoeconomic costs for India. A dependence is a strategic vulnerability if it passes the adversary and substitutability tests, and either the incidence or the cascading test.</td>
           <td>Dependence on China of 30% or more, an RIF of 0.01 or more, and a PCI of at least 1 but below 1.75. A disruption could last from the short to the medium term (indicative).</td></tr>
         <tr><td><strong>Critical vulnerability</strong></td>
-          <td>A strategic vulnerability that also passes the capability gap test or the national security test. The adversary's lead cannot be matched within 18 months and would take decades to close, or the dependence lies in a sensitive sector.</td>
+          <td>A strategic vulnerability that also passes the capability gap test or the national security test. The adversary's technical lead cannot be matched within 18 months, or the dependence lies in a sensitive sector.</td>
           <td>Dependence on China of 30% or more, an RIF of 0.01 or more, and a PCI of 1.75 or more. A disruption could last from the medium into the long term, beyond 18 months (indicative).</td></tr>
       </tbody></table></div>
       <p>The split at a PCI of 1.75 follows the disruption timelines. From a PCI of 1.75 upward, a disruption could last beyond 18 months. That is the time frame the capability gap test uses to define a critical vulnerability.</p>
@@ -1910,11 +1929,11 @@ const METH = [
   { id: 'colours', g: 'Reference', t: 'Verdicts and colours', s: 'Verdicts and colours', h: () => `
       <p>The colours match the vulnerability matrix. Teal marks low-complexity dependence.</p>
       <div class="scroll-x keytable"><table class="data"><thead><tr><th>Verdict</th><th>PCI</th><th>Disruption (indicative)</th></tr></thead><tbody>
-        <tr><td>${swatch('crit')}Critical: Extremely High complexity</td><td class="mono">PCI ≥ 2</td><td>Long-term</td></tr>
-        <tr><td>${swatch('vh')}Critical: Very High complexity</td><td class="mono">1.75 to &lt; 2</td><td>Medium to long-term</td></tr>
-        <tr><td>${swatch('high')}Strategic: High complexity</td><td class="mono">1.5 to &lt; 1.75</td><td>Medium-term</td></tr>
-        <tr><td>${swatch('mod')}Strategic: Moderate complexity</td><td class="mono">1.25 to &lt; 1.5</td><td>Short to medium-term</td></tr>
-        <tr><td>${swatch('low')}Strategic: Mild complexity</td><td class="mono">1 to &lt; 1.25</td><td>Short-term</td></tr>
+        <tr><td>${swatch('crit')}Critical: Extremely High complexity</td><td class="mono">PCI ≥ 2</td><td>Long-term: over 27 months</td></tr>
+        <tr><td>${swatch('vh')}Critical: Very High complexity</td><td class="mono">1.75 to &lt; 2</td><td>Medium to long-term: 18 to 27 months</td></tr>
+        <tr><td>${swatch('high')}Strategic: High complexity</td><td class="mono">1.5 to &lt; 1.75</td><td>Medium-term: about 18 months</td></tr>
+        <tr><td>${swatch('mod')}Strategic: Moderate complexity</td><td class="mono">1.25 to &lt; 1.5</td><td>Short to medium-term: 9 to 18 months</td></tr>
+        <tr><td>${swatch('low')}Strategic: Mild complexity</td><td class="mono">1 to &lt; 1.25</td><td>Short-term: up to 9 months</td></tr>
         <tr><td>${swatch('opp')}Low-complexity dependence</td><td class="mono">PCI &lt; 1</td><td>Shortest: many alternative suppliers, easier to diversify</td></tr>
         <tr><td>${swatch('na')}Not assessed</td><td class="mono">No HS6 score</td><td>Passes D and RIF; PCI pending</td></tr>
         <tr><td>${swatch('below')}Below threshold</td><td class="mono">n/a</td><td>D below 30% or RIF below 0.01</td></tr>
