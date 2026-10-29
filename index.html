@@ -751,6 +751,81 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .verdict-chart { margin-top: 40px; padding-top: 24px; border-top: var(--rule); }
 .verdict-chart h2 { font-size: 21px; margin: 0 0 6px; }
 .verdict-chart .ch-links { margin-top: 14px; }
+/* Four-year trends */
+.tr-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink-20); margin: 20px 0 34px; }
+.tr-k { padding: 14px 20px 16px; border-left: 1px solid var(--ink-20); }
+.tr-k:first-child { border-left: 0; padding-left: 0; }
+.tr-kl { font-size: 13px; color: var(--ink-70); margin: 0; min-height: 2.6em; }
+.tr-kv { font-size: 32px; font-weight: 700; color: var(--wine); line-height: 1.1; margin: 2px 0 12px; letter-spacing: -0.5px; }
+.tr-kv small { font-size: 15px; color: var(--ink-50); font-weight: 500; letter-spacing: 0; }
+.tr-kb { display: grid; grid-template-columns: 72px minmax(0, 1fr); column-gap: 8px; align-items: center; margin-bottom: 6px; }
+.tr-kb span { font-size: 11px; color: var(--ink-50); grid-row: span 2; white-space: nowrap; }
+.tr-kb i { display: block; height: 14px; }
+.tr-kb b { font-size: 12px; font-weight: 600; margin-top: 2px; }
+.tr-cells { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; max-width: 200px; }
+.tr-cells i { display: block; aspect-ratio: 1; background: var(--ink-10); }
+.tr-cells i.up { background: var(--wine); }
+.tr-kn { font-size: 11.5px; color: var(--ink-50); margin: 6px 0 0; }
+.tr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 34px 48px; margin-top: 10px; }
+.tr-p { border-top: 2px solid var(--ink); padding-top: 14px; }
+.tr-wide { margin-top: 34px; }
+.tr-p h2 { font-size: 18px; margin: 0 0 4px; }
+.tr-imp { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end; }
+.tr-pair { display: flex; gap: 4px; align-items: flex-end; height: 200px; }
+.tr-col { flex: 1; position: relative; }
+.tr-col b { position: absolute; bottom: 100%; left: 0; right: 0; text-align: center; font-size: 10.5px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; }
+.tr-yl { display: block; font-size: 12.5px; margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--ink); }
+.tr-ys { display: block; font-size: 11.5px; color: var(--wine); font-weight: 600; white-space: nowrap; }
+.tr-grp { min-width: 0; }
+.tr-ys2 { display: block; font-size: 11.5px; color: var(--ink-50); }
+.tr-row { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 16px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--ink-10); }
+.tr-hb { display: grid; gap: 3px; }
+.tr-hr { display: grid; grid-template-columns: 52px minmax(0, 1fr) 44px; align-items: center; column-gap: 6px; }
+.tr-hr em { font-style: normal; font-size: 10.5px; color: var(--ink-50); grid-row: 1; }
+.tr-hr i { display: block; height: 9px; grid-row: 1; grid-column: 2; }
+.tr-hr b { grid-row: 1; grid-column: 3; font-size: 10.5px; font-weight: 600; justify-self: end; color: var(--ink-70); }
+.tr-rl { font-size: 13.5px; }
+.tr-chg { display: block; font-size: 12.5px; font-weight: 600; color: var(--wine); margin-top: 2px; }
+.tr-spark { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; align-items: end; }
+.tr-sb { display: flex; flex-direction: column; align-items: stretch; }
+.tr-sb i { display: block; background: var(--wine); }
+.tr-sb em { font-style: normal; font-size: 10.5px; color: var(--ink-70); text-align: center; margin-top: 3px; }
+.tr-st { display: grid; grid-template-columns: 78px minmax(0, 1fr) 52px; gap: 10px; align-items: center; margin-bottom: 8px; }
+.tr-sl { font-size: 12px; color: var(--ink-70); }
+.tr-sbar { display: flex; gap: 2px; height: 30px; }
+.tr-sbar i { display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 11px; font-weight: 600; min-width: 2px; }
+.tr-tot { font-size: 13px; font-weight: 600; text-align: right; }
+.tr-leg { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--ink-70); margin-top: 6px; }
+.tr-leg i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border: 1px solid rgba(23,20,19,0.25); vertical-align: -1px; }
+table.matrix.dmx td { text-align: center; vertical-align: middle; height: 64px; }
+table.matrix.dmx td b { display: block; font-size: 17px; }
+table.matrix.dmx td span { display: block; font-size: 11px; opacity: 0.9; margin-top: 2px; }
+table.matrix.dmx td.flat { opacity: 0.55; }
+table.matrix.dmx td.flat b { font-size: 12px; font-weight: 500; }
+.moves.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1180px) { .tr-grid { grid-template-columns: 1fr; } .moves.three { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .tr-kpis { grid-template-columns: 1fr 1fr; }
+  .tr-k { padding: 12px 10px 14px; }
+  .tr-k:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .tr-k:nth-child(n+3) { border-top: 1px solid var(--ink-20); }
+  .tr-kv { font-size: 26px; }
+  .tr-kb { grid-template-columns: 1fr; }
+  .tr-kb span { grid-row: auto; }
+  .tr-row { grid-template-columns: 1fr; gap: 6px; }
+  .tr-col b { font-size: 9px; }
+  .tr-ys { font-size: 9.5px; white-space: normal; }
+  .tr-yl, .tr-ys2 { font-size: 10px; }
+  .tr-imp { gap: 8px; }
+  .tr-st { grid-template-columns: 62px minmax(0, 1fr) 40px; gap: 6px; }
+  .tr-sl { font-size: 10.5px; }
+}
+@container (max-width: 520px) {
+  .mx-fit table.matrix.dmx td b { font-size: 12px; }
+  .mx-fit table.matrix.dmx td span { display: none; }
+  .mx-fit table.matrix.dmx td.flat b { font-size: 0; }
+  .mx-fit table.matrix.dmx td.flat b::after { content: '0'; font-size: 12px; }
+}
 </style>
 </head>
 <body>
@@ -1137,7 +1212,7 @@ function sideSelect(groups, cur) {
   return `<label class="side-select"><span>On this page</span><select onchange="location.hash = this.value">${groups.map(([l, items]) => `<optgroup label="${esc(l)}">${items.map(x => `<option value="${x.href}"${x.id === cur ? ' selected' : ''}>${x.n ? `${x.n}. ` : ''}${esc(x.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
 }
 // The matrix and the bubble chart, one click from every sidebar
-const JUMPS = [{ id: 'j-matrix', label: 'Vulnerability matrix', href: '#overview?ch=5&at=matrix' }, { id: 'j-chart', label: 'Bubble chart', href: '#overview?ch=5&at=chart' }];
+const JUMPS = [{ id: 'j-matrix', label: 'Vulnerability matrix', href: '#overview?ch=5&at=matrix' }, { id: 'j-chart', label: 'Bubble chart', href: '#overview?ch=5&at=chart' }, { id: 'j-trends', label: 'Four-year trends', href: '#overview?ch=6' }];
 function pnHTML(prev, next) {
   return `<nav class="pn" aria-label="Previous and next">${prev ? `<a class="btn" href="${prev.href}">← ${esc(prev.label)}</a>` : '<span></span>'}${next ? `<a class="btn primary" href="${next.href}">${esc(next.label)} →</a>` : ''}</nav>`;
 }
@@ -1151,7 +1226,8 @@ const CHAPTERS = [
   { t: 'How big a disruption', k: 'scale of disruption rif immediate shock severe major substantial 0.01' },
   { t: 'How long it would last', k: 'duration of disruption pci complexity short-term long-term horizon' },
   { t: 'The verdict', k: 'vulnerability matrix verdict critical strategic low complexity not assessed' },
-  { t: 'What changed', k: 'what changed newly vulnerable largest rise in dependence trend years' },
+  { t: 'Four-year trends', k: 'trends four years 2022 2026 what changed growth imports items dependence grades vulnerability grown' },
+  { t: 'Which items moved', k: 'items moved matrix change persistent newly vulnerable no longer vulnerable largest rise in dependence year on year' },
 ];
 const chLink = n => ({ id: n, n, label: CHAPTERS[n].t, href: `#overview?ch=${n}` });
 const kick = t => `<p class="kicker">${t}</p>`;
@@ -1189,6 +1265,15 @@ function bindBasis(app) {
   sync();
 }
 
+// Counts for the trends chapter, one set per year
+function trendStats() {
+  return Object.fromEntries(YEARS.map(k => {
+    const t = STATS[k], g = glance(k), dep = ITEMS.map(i => i.y[k].d).filter(d => d >= TH.D_MIN);
+    return [k, { total: t.total, china: t.china, imported: g.imported, fromChina: g.fromChina, dep30: t.dep30, passed: g.passed, vul: t.crit + t.strat,
+      acute: dep.filter(d => d >= 70).length, high: dep.filter(d => d >= 50 && d < 70).length, mod: dep.filter(d => d < 50).length,
+      crit: t.crit, strat: t.strat, opp: t.n.opp, na: t.n.na }];
+  }));
+}
 const CH_RENDER = [
   // 0. The whole method as one picture
   (y, s) => {
@@ -1225,16 +1310,16 @@ const CH_RENDER = [
   // 2. Step 1: dependence, shown as the distribution the filter cuts
   (y, s, py, p) => {
     const g = glance(y), bins = Array(10).fill(0);
-    for (const i of ITEMS) { const r = i.y[y]; if (r.t > 0) bins[Math.min(9, Math.floor(r.d / 10))]++; }
+    for (const i of ITEMS) { const r = i.y[y]; if (r.c > 0) bins[Math.min(9, Math.floor(r.d / 10))]++; }
     const mx = Math.max(...bins);
     return `<div class="ch-grid"><div class="ch-text">${kick('Step 1 of the method · Dependence filter')}
       <h1>How dependent is India on China?</h1>
       <p>${term('dependence', 'Dependence')} is China's share of India's imports of an item. Items where China supplies 30% or more pass the ${term('depfilter', 'dependence filter')} and go forward. Below that line, India's supply is treated as diversified enough, and the item is set aside.</p>
-      ${figs([[int(s.dep30), 'items with 30% or more dependence'], [pct(s.dep30 / g.imported * 100), `of the ${int(g.imported)} items India imports`],
+      ${figs([[int(s.dep30), 'items with 30% or more dependence'], [pct(s.dep30 / g.fromChina * 100), `of the ${int(g.fromChina)} items India imports from China`],
         [int(bins[9]), 'items China supplies almost entirely (90% or more)'], [p ? change(s.dep30, p.dep30, int) : 'n/a', p ? `items compared with ${FY[py]}` : 'earliest year in the Observatory', 'muted']])}
       ${whyBox('Why 30%?', "<p>China accounts for roughly 30% of global production capacity. If India buys more than 30% of an item from China, it relies on China more than China's share of world production would explain.</p>")}
       <p class="ch-links"><a href="#explorer?tab=all&tier=30plus">Browse these items in the Explorer →</a><a href="#methodology?s=dependence">Read the method</a></p>
-      </div><div class="ch-vis"><p class="vis-t">Items by China's share of India's imports, ${FY[y]}</p><p class="vis-s">Each bar counts items. Wine bars pass the dependence filter.</p>
+      </div><div class="ch-vis"><p class="vis-t">Items India imports from China, by China's share of India's imports, ${FY[y]}</p><p class="vis-s">Each bar counts items. Wine bars pass the dependence filter. The ${int(g.imported - g.fromChina)} items with no imports from China are left out.</p>
       <div class="hist">${bins.map((v, k) => `<div class="hb${k >= 3 ? ' pass' : ''}"><span class="hv">${int(v)}</span><span class="hbar" style="height:${(v / mx * 280).toFixed(0)}px"></span></div>`).join('')}<span class="hline"><span>30% threshold</span></span></div>
       <div class="hlabels">${bins.map((v, k) => `<span>${k * 10}–${k * 10 + 10}%</span>`).join('')}</div></div></div>`;
   },
@@ -1272,32 +1357,92 @@ const CH_RENDER = [
       ${matrixHTML()}
       ${verdictChartHTML(y)}`;
   },
-  // 6. Change over time
-  (y, s, py) => {
-    const mx = Math.max(...YEARS.map(k => STATS[k].crit + STATS[k].strat));
-    const cols = YEARS.map(k => { const t = STATS[k], v = t.crit + t.strat; return `<div class="yc${k === y ? ' on' : ''}"><span class="yv">${int(v)}</span><span class="yb" style="height:${(v / mx * 170).toFixed(0)}px"></span><span class="yl">${FY[k]}</span></div>`; }).join('');
-    const newly = py ? ITEMS.filter(i => VULN.includes(i.y[y].cat) && !VULN.includes(i.y[py].cat)).sort((a, b) => b.y[y].rif - a.y[y].rif) : [];
-    const rise = py ? ITEMS.filter(i => i.y[y].c >= 10 && i.y[py].t > 0).map(i => ({ i, dd: i.y[y].d - i.y[py].d })).filter(x => x.dd > 0).sort((a, b) => b.dd - a.dd).slice(0, 8) : [];
-    const p = py ? STATS[py] : null;
-    return `<div class="ch-grid"><div class="ch-text">${kick('Change over time')}
-      <h1>${py ? `What changed since ${FY[py]}?` : 'What changed?'}</h1>
-      <p>${py ? `Comparing ${FY[y]} with ${FY[py]}: the items where dependence on China now potentially renders India ${term('vuln', 'strategically or critically vulnerable')}, and where China's share of India's imports rose most.` : `${FY[y]} is the earliest year in the Observatory, so there is no earlier year to compare it with. Choose a later year in the sidebar.`}</p>
-      ${figs([[int(s.crit + s.strat), 'strategic and critical vulnerabilities'], [p ? change(s.crit + s.strat, p.crit + p.strat, int) : 'n/a', p ? `compared with ${FY[py]}` : 'earliest year', 'muted'],
-        [py ? int(newly.length) : 'n/a', 'items in which India became potentially vulnerable this year'], [p ? change(s.dep30, p.dep30, int) : 'n/a', 'change in items with 30% or more dependence', 'muted']])}
-      <p class="vis-t">Strategic and critical vulnerabilities by year</p><div class="ycols small">${cols}</div>
-      </div><div class="ch-vis">${py ? `<div class="moves">
-        <div><h3>Where India became potentially vulnerable <span>${int(newly.length)} items</span></h3><p class="vis-s">Items that became strategic or critical vulnerabilities for India in ${FY[y]}. Highest RIF first.</p><ol class="mini" id="ovNew">${newly.slice(0, 8).map(i => miniRow(i, i.y[y].cat, `RIF ${rifFmt(i.y[y].rif)}`)).join('')}</ol></div>
-        <div><h3>Largest rise in dependence</h3><p class="vis-s">Items with at least US$10 mn of imports from China in ${FY[y]}.</p><ol class="mini" id="ovRise">${rise.map(({ i, dd }) => miniRow(i, i.y[y].cat, `+${nf(dd, 1)} pts`, `${pct(i.y[py].d)} → ${pct(i.y[y].d)}`)).join('')}</ol></div>
-      </div>` : ''}</div></div>`;
-  },
+  // 6 and 7. Four-year trends (the overall picture) and which items moved (the item-level detail)
+  (y, s, py) => trendsHTML(y, py, 'overall'),
+  (y, s, py) => trendsHTML(y, py, 'items'),
 ];
+function trendsHTML(y, py, part) {
+  {
+    const f = YEARS[0], l = YEARS[YEARS.length - 1], T = trendStats();
+    const grow = (a, b) => `${b >= a ? '+' : '−'}${int(Math.abs(b - a))}${a ? ` (${b >= a ? '+' : '−'}${nf(Math.abs(b - a) / a * 100, 0)}%)` : ''}`;
+    // 1. Imports
+    const mxT = Math.max(...YEARS.map(k => T[k].total));
+    const imp = YEARS.map(k => `<div class="tr-grp"><div class="tr-pair">
+        <span class="tr-col" style="height:${(T[k].total / mxT * 190).toFixed(0)}px;background:#b5aea8"><b>${usd(T[k].total)}</b></span>
+        <span class="tr-col" style="height:${(T[k].china / mxT * 190).toFixed(0)}px;background:var(--wine)"></span></div>
+        <span class="tr-yl">${FY[k]}</span><span class="tr-ys">China ${usd(T[k].china)}</span><span class="tr-ys2">${pct(T[k].china / T[k].total * 100)} of total</span></div>`).join('');
+    // 2. Counts through the method
+    const rows = [['Items India imported', 'imported'], ['Items imported from China', 'fromChina'], [`Items ${term('depfilter', '30% or more dependent')}`, 'dep30'],
+      [`Items that pass both filters: 30% or more dependence and an ${term('rif', 'RIF')} of 0.01 or more`, 'passed'], [`Items exhibiting potential ${term('strategic', 'strategic')} or ${term('critical', 'critical')} vulnerability`, 'vul']].map(([lab, k]) => {
+      // One scale for every row, so a count of 444 looks as small next to 9,561 as it is
+      return `<div class="tr-row"><div class="tr-rl">${lab}<span class="tr-chg">${grow(T[f][k], T[l][k])}</span></div><div class="tr-hb">${YEARS.map(z =>
+        `<span class="tr-hr"><em>${FY[z].slice(3)}</em><i style="width:${(T[z][k] / T[l].imported * 100).toFixed(2)}%;background:${z === l ? 'var(--wine)' : '#b5aea8'}"></i><b>${int(T[z][k])}</b></span>`).join('')}</div></div>`; }).join('');
+    // 3 and 4. Stacked bars, one per year
+    const stack = (parts, mx) => YEARS.map(k => { const tot = parts.reduce((a, [key]) => a + T[k][key], 0);
+      return `<div class="tr-st"><span class="tr-sl">${FY[k]}</span><span class="tr-sbar" style="width:${(tot / mx * 100).toFixed(1)}%">${parts.map(([key, , fill, ink]) =>
+        `<i style="flex:${T[k][key]};background:${fill};color:${ink}${fill === '#ffffff' ? ';outline:1px dashed rgba(23,20,19,0.55);outline-offset:-1px' : ''}" title="${int(T[k][key])}">${T[k][key] / tot > 0.07 ? int(T[k][key]) : ''}</i>`).join('')}</span><span class="tr-tot">${int(tot)}</span></div>`; }).join('')
+      + `<div class="tr-leg">${parts.map(([, lab, fill]) => `<span><i style="background:${fill}"></i>${lab}</span>`).join('')}</div>`;
+    const depParts = [['acute', 'Acute (70% or more)', '#3d0826', '#fff'], ['high', 'High (50 to 70%)', '#8a3a62', '#fff'], ['mod', 'Moderate (30 to 50%)', '#d6b3c4', 'var(--ink)']];
+    const verParts = [['crit', 'Critical', CAT.crit.fill, '#fff'], ['strat', 'Strategic', CAT.high.fill, '#fff'], ['opp', 'Low-complexity dependence', CAT.opp.fill, '#fff'], ['na', 'Not assessed', '#ffffff', 'var(--ink)']];
+    // 4b. Change in each matrix cell, first year to last
+    const c0 = matrixCells(f), c1 = matrixCells(l);
+    const dmx = `<table class="matrix static dmx"><thead><tr><th class="corner">Scale / Duration<span class="mr">RIF / PCI</span></th>${MATRIX_COLS.map(c => `<th class="m-${c.id}"><span class="mn">${c.name}</span><span class="mr">${c.range}</span></th>`).join('')}</tr></thead><tbody>${
+      RIF_ROWS.map(rw => `<tr><th class="rh" style="background:${rw.fill}">${rw.name}<span class="mr">${rw.range}</span></th>${MATRIX_COLS.map(c => {
+        const a = (c0[rw.id + '|' + c.id] || []).length, b = (c1[rw.id + '|' + c.id] || []).length, d = b - a;
+        return `<td class="m-${c.id}${d ? '' : ' flat'}"><b>${d > 0 ? '+' : d < 0 ? '−' : ''}${d ? int(Math.abs(d)) : 'no change'}</b><span>${int(a)} → ${int(b)}</span></td>`; }).join('')}</tr>`).join('')}</tbody></table>`;
+    const cellsUp = RIF_ROWS.flatMap(rw => MATRIX_COLS.map(c => ((c1[rw.id + '|' + c.id] || []).length - (c0[rw.id + '|' + c.id] || []).length))).filter(d => d > 0).length;
+    // 5. Persistent, new and dropped out
+    const V = (i, k) => VULN.includes(i.y[k].cat);
+    const persist = ITEMS.filter(i => YEARS.every(k => V(i, k))).sort((a, b) => b.y[l].rif - a.y[l].rif);
+    const entered = ITEMS.filter(i => V(i, l) && !V(i, f)).sort((a, b) => b.y[l].rif - a.y[l].rif);
+    const left = ITEMS.filter(i => V(i, f) && !V(i, l)).sort((a, b) => b.y[f].rif - a.y[f].rif);
+    const list = (L, k, sub) => `<ol class="mini">${L.slice(0, 6).map(i => miniRow(i, i.y[k].cat, `RIF ${rifFmt(i.y[k].rif)}`, sub(i))).join('')}</ol>`;
+    // Year-on-year detail for the selected year
+    const newly = py ? ITEMS.filter(i => V(i, y) && !V(i, py)).sort((a, b) => b.y[y].rif - a.y[y].rif) : [];
+    const rise = py ? ITEMS.filter(i => i.y[y].c >= 10 && i.y[py].t > 0).map(i => ({ i, dd: i.y[y].d - i.y[py].d })).filter(x => x.dd > 0).sort((a, b) => b.dd - a.dd).slice(0, 8) : [];
+    if (part === 'overall') return `${kick(`Change over time · ${FY[f]} to ${FY[l]}`)}
+      <h1>How has India's dependence on China changed?</h1>
+      <p class="lede">Across four financial years, India bought more from China, depended on it for more items, and became ${term('vuln', 'potentially vulnerable')} in more of them. Each panel below shows all four years. The next chapter follows the items behind these numbers.</p>
+      <div class="tr-kpis">${[['Imports from China', T[f].china, T[l].china, usd], ['Items 30% or more dependent on China', T[f].dep30, T[l].dep30, int], ['Items exhibiting potential strategic or critical vulnerability', T[f].vul, T[l].vul, int]].map(([lab, a, b, fmt]) => {
+        const mx = Math.max(a, b);
+        return `<div class="tr-k"><p class="tr-kl">${lab}</p><p class="tr-kv">${b >= a ? '+' : '−'}${nf(Math.abs(b - a) / a * 100, 0)}%</p>
+          <div class="tr-kb"><span>${FY[f]}</span><i style="width:${(a / mx * 100).toFixed(1)}%;background:#b5aea8"></i><b>${fmt(a)}</b></div>
+          <div class="tr-kb"><span>${FY[l]}</span><i style="width:${(b / mx * 100).toFixed(1)}%;background:var(--wine)"></i><b>${fmt(b)}</b></div></div>`; }).join('')}
+        <div class="tr-k"><p class="tr-kl">Matrix cells holding more items</p><p class="tr-kv">${cellsUp} <small>of 21</small></p>
+          <div class="tr-cells">${RIF_ROWS.flatMap(rw => MATRIX_COLS.map(c => { const d = (c1[rw.id + '|' + c.id] || []).length - (c0[rw.id + '|' + c.id] || []).length;
+            return `<i class="${d > 0 ? 'up' : ''}" title="${esc(rw.name)} × ${esc(c.name)}: ${d > 0 ? '+' : ''}${d}"></i>`; })).join('')}</div>
+          <p class="tr-kn">Wine squares grew since ${FY[f]}</p></div>
+      </div>
+      <div class="tr-grid">
+        <section class="tr-p"><h2>Is India buying more from China?</h2><p class="vis-s">Total imports (grey) and imports from China (wine), with China's share of the total.</p><div class="tr-imp">${imp}</div></section>
+        <section class="tr-p"><h2>Is dependence spreading?</h2><p class="vis-s">Each row follows one count through the four years. All bars share one scale, so their lengths can be compared across rows; the figure gives the change since ${FY[f]}.</p>${rows}</section>
+        <section class="tr-p"><h2>Is dependence getting deeper?</h2><p class="vis-s">Items with 30% or more ${term('dependence', 'dependence')} on China, by grade.</p>${stack(depParts, Math.max(...YEARS.map(k => T[k].dep30)))}</section>
+        <section class="tr-p"><h2>Has vulnerability grown?</h2><p class="vis-s">Items that pass both filters (30% or more dependence and an RIF of 0.01 or more), by verdict.</p>${stack(verParts, Math.max(...YEARS.map(k => T[k].passed)))}</section>
+      </div>
+`;
+    return `${kick(`Change over time · ${FY[f]} to ${FY[l]}`)}
+      <h1>Where did vulnerability grow, and in which items?</h1>
+      <p class="lede">This chapter follows individual items. It shows which cells of the matrix gained items since ${FY[f]}, which items stayed ${term('vuln', 'potentially vulnerable')} throughout, and which entered or left. The lists at the end compare the year selected in the sidebar with the year before.</p>
+      <section class="tr-p"><h2>Where in the matrix did items move?</h2><p class="vis-s">Change in the number of items in each cell of the ${term('shock', 'scale')} × ${term('duration', 'duration')} matrix, ${FY[f]} to ${FY[l]}. ${cellsUp} of the 21 cells hold more items than four years earlier.</p><div class="mx-fit">${dmx}</div></section>
+      <section class="tr-p tr-wide"><h2>Persistent or new?</h2><p class="vis-s">Items exhibiting potential strategic or critical vulnerability across the four years. Highest RIF first; select an item for its full record.</p>
+        <div class="moves three">
+          <div><h3>Vulnerable in all four years <span>${int(persist.length)} items</span></h3>${list(persist, l, i => `${CAT[i.y[l].cat].short}`)}</div>
+          <div><h3>Became vulnerable since ${FY[f]} <span>${int(entered.length)} items</span></h3>${list(entered, l, i => `${CAT[i.y[l].cat].short} in ${FY[l]}`)}</div>
+          <div><h3>No longer vulnerable <span>${int(left.length)} items</span></h3>${list(left, f, i => `${CAT[i.y[f].cat].short} in ${FY[f]}; ${CAT[i.y[l].cat].short.toLowerCase()} in ${FY[l]}`)}</div>
+        </div></section>
+      <section class="tr-p tr-wide"><h2>${py ? `${FY[y]} compared with ${FY[py]}` : 'Year on year'}</h2>${py ? `<div class="moves">
+        <div><h3>Where India became potentially vulnerable <span>${int(newly.length)} items</span></h3><p class="vis-s">Items that became strategic or critical vulnerabilities for India in ${FY[y]}. Highest RIF first.</p><ol class="mini">${newly.slice(0, 8).map(i => miniRow(i, i.y[y].cat, `RIF ${rifFmt(i.y[y].rif)}`)).join('')}</ol></div>
+        <div><h3>Largest rise in dependence</h3><p class="vis-s">Items with at least US$10 mn of imports from China in ${FY[y]}.</p><ol class="mini">${rise.map(({ i, dd }) => miniRow(i, i.y[y].cat, `+${nf(dd, 1)} pts`, `${pct(i.y[py].d)} → ${pct(i.y[y].d)}`)).join('')}</ol></div>
+      </div>` : `<p class="vis-s">${FY[y]} is the earliest year in the Observatory. Choose a later year in the sidebar to compare it with the year before.</p>`}</section>`;
+  }
+}
 const CH_BIND = { 3: bindBasis, 4: bindBasis, 5: app => { bindMatrix(app); drawScatter(ITEMS.filter(i => R(i).cat !== 'below')); },
-  6: app => $$('ol.mini', app).forEach(ol => ol.addEventListener('click', e => { const li = e.target.closest('li[data-hs8]'); if (li) openDetail(li.dataset.hs8); })) };
+  7: app => $$('ol.mini', app).forEach(ol => ol.addEventListener('click', e => { const li = e.target.closest('li[data-hs8]'); if (li) openDetail(li.dataset.hs8); })) };
 
 PAGES.overview = (app, side) => {
   const y = S.year, s = STATS[y], py = other(y), p = py ? STATS[py] : null, n = S.ch;
   const items = CHAPTERS.map((ch, k) => chLink(k));
-  side.innerHTML = yearSeg() + sideLinks('The story, in six steps', items, n) + sideLinks('Jump to', JUMPS) + sideSelect([['The story', items], ['Jump to', JUMPS]], n) + sideMeta();
+  side.innerHTML = yearSeg() + sideLinks('The story, in seven steps', items, n) + sideLinks('Jump to', JUMPS) + sideSelect([['The story', items], ['Jump to', JUMPS]], n) + sideMeta();
   app.innerHTML = `<div class="chapter ch-${n}">${CH_RENDER[n](y, s, py, p)}${n ? pnHTML(chLink(n - 1), n < CHAPTERS.length - 1 ? chLink(n + 1) : null) : ''}</div>`;
   CH_BIND[n]?.(app);
 };
@@ -1523,7 +1668,7 @@ PAGES.explorer = (app, side) => {
       <label>Scale of disruption<select id="exRc">${opt([['', 'Any'], ['ext', 'Severe (RIF 1 or more)'], ['exp', 'Major (0.1 to 1)'], ['sub', 'Substantial (0.01 to 0.1)'], ['ins', 'Insignificant (below 0.01)']], f.rc)}</select></label>
       <label>Flags<select id="exFlag">${opt([['', 'Any'], ['ns', 'National-security sector'], ['basket', 'Basket lines only'], ['specific', 'Exclude basket lines']], f.flag)}</select></label>
       <button class="btn" id="exReset" type="button">Reset all</button></div></details>
-    ${sideLinks('Jump to', [...JUMPS, { id: 'j-change', label: 'What changed since last year', href: '#overview?ch=6' }])}
+    ${sideLinks('Jump to', JUMPS)}
     ${sideMeta()}`;
   app.innerHTML = `
     <div class="ex-head"><h1>Vulnerability Explorer</h1>
