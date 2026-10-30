@@ -669,6 +669,7 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
 .tier i { width: 8px; height: 12px; background: #e5e0db; display: block; }
 .tier i.on { background: #5b0f00; }
 .pci-s { display: block; font-size: 11.5px; color: var(--ink-50); margin-top: 3px; }
+.pci-v { display: block; margin-bottom: 4px; }
 .chart-note { margin-top: 4px; }
 .chart-box { height: 560px; }
 
@@ -1151,7 +1152,8 @@ const COLS = {
   // Dependence as a small bar, scale of disruption as tier marks, complexity inside the verdict
   d:     { h: 'Dependence', n: 1, sort: (i, r) => r.d, cell: (i, r) => `<td class="n"><span class="dcell"><span class="dbar" aria-hidden="true"><i style="width:${Math.min(100, r.d).toFixed(1)}%"></i></span>${pct(r.d)}</span></td>` },
   rif:   { h: 'Scale (RIF)', n: 1, sort: (i, r) => r.rif, cell: (i, r) => `<td class="n"><span class="tier" title="${RIFNAME[r.rc]} scale of disruption" aria-label="${RIFNAME[r.rc]}">${[1, 2, 3].map(k => `<i class="${k <= ({ ins: 0, sub: 1, exp: 2, ext: 3 })[r.rc] ? 'on' : ''}"></i>`).join('')}</span>${rifFmt(r.rif)}</td>` },
-  pci:   { h: 'Verdict', sort: i => i.pci ?? -99, cell: (i, r) => `<td>${badge(r.cat)}<span class="pci-s">PCI ${pciFmt(i.pci)}</span></td>` },
+  // PCI value first, like the RIF value beside it; the verdict badge sits underneath
+  pci:   { h: 'Duration (PCI)', sort: i => i.pci ?? -99, cell: (i, r) => `<td><span class="pci-v">${pciFmt(i.pci)}</span>${badge(r.cat)}</td>` },
   cat:   { h: 'Category', sort: (i, r) => CAT_ORDER.indexOf(r.cat), cell: (i, r) => `<td>${badge(r.cat)}</td>` },
 };
 
