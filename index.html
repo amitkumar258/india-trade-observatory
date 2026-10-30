@@ -411,9 +411,11 @@ ol.mini .m-sub { grid-column: 1 / -1; font-size: 11.5px; color: var(--ink-50); }
 .tags { display: block; margin-top: 4px; }
 .flag { display: inline-block; font-size: 11px; line-height: 1.4; padding: 0 6px; margin-right: 6px; border: 1px solid; white-space: nowrap; }
 .flag.ns { color: var(--wine); border-color: var(--wine); background: var(--wine-soft); }
+.flag.wl { color: #4f6d8a; border-color: #4f6d8a; background: #eef2f6; }
 .flag.bk { color: var(--ink-70); border-color: var(--ink-20); background: var(--deep); }
 .dr-flag { font-size: 13.5px; margin: 12px 0 0; padding: 8px 10px; border-left: 3px solid; }
 .dr-flag.ns { border-color: var(--wine); background: var(--wine-soft); }
+.dr-flag.wl { border-color: #4f6d8a; background: #eef2f6; }
 .dr-flag.bk { border-color: var(--ink-50); background: var(--deep); }
 .tab-note { font-size: 14px; color: var(--ink-70); margin: 12px 0 0; }
 .vchips:empty { display: none; }
@@ -843,6 +845,21 @@ table.matrix th.corner .cx-s { bottom: 8px; left: 9px; text-align: left; }
   .mx-fit table.matrix th.corner .cx-d { top: 6px; right: 4px; }
   .mx-fit table.matrix th.corner .cx-s { bottom: 6px; left: 4px; }
 }
+/* Explorer table: fixed column widths so a long name or tag on any page wraps instead of pushing the table off screen */
+@media (min-width: 641px) {
+  #exTable table.data { table-layout: fixed; width: 100%; }
+  #exTable table.data th:nth-child(1) { width: 96px; }
+  #exTable table.data th:nth-child(3) { width: 100px; }
+  #exTable table.data th:nth-child(4) { width: 150px; }
+  #exTable table.data th:nth-child(5) { width: 112px; }
+  #exTable table.data th:nth-child(6) { width: 150px; }
+  #exTable table.data .badge { white-space: normal; max-width: 100%; }
+  #exTable table.data td { overflow-wrap: anywhere; }
+  #exTable table.data .tags { white-space: normal; }
+}
+.yc .yb.wl { background: #c3cfdb; }
+.yc.on .yb.wl { background: #4f6d8a; }
+ol.mini.wl li { --cc: #4f6d8a !important; }
 </style>
 </head>
 <body>
@@ -998,7 +1015,7 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const nf = (v, dp = 1) => Number(v).toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
 const int = v => Number(v).toLocaleString('en-US');
-const usd = v => v >= 1000 ? `US$${nf(v / 1000, 1)} bn` : `US$${nf(v, 1)} mn`;
+const usd = v => v >= 1000 ? `US$${nf(v / 1000, 1)} bn` : v > 0 && v < 0.05 ? 'under US$0.1 mn' : `US$${nf(v, 1)} mn`;
 const pct = v => v > 0 && v < 0.05 ? '<0.1%' : `${nf(v, 1)}%`;
 // Two decimals, truncated rather than rounded so no item appears to cross a threshold (0.099 shows 0.09, not 0.10)
 const rifFmt = v => v >= 0.01 ? nf(Math.floor(v * 100) / 100, 2) : v > 0 ? '<0.01' : '0';
@@ -1036,6 +1053,8 @@ function init(d) {
   BY_HS8 = new Map(ITEMS.map(i => [i.hs8, i]));
   BY_HS6 = new Map();
   for (const i of ITEMS) { if (!BY_HS6.has(i.hs6)) BY_HS6.set(i.hs6, []); BY_HS6.get(i.hs6).push(i); }
+  // Watch list: acute dependence on a complex product, but too small to pass the RIF threshold
+  for (const i of ITEMS) for (const y of YEARS) { const r = i.y[y]; r.watch = r.c > 0 && r.d >= 70 && i.pci != null && i.pci >= 1 && r.rif < TH.RIF_MIN; }
   for (const y of YEARS) STATS[y] = stats(y);
   // Year buttons live in the sidebar, which is redrawn on every page
   document.addEventListener('click', e => { const b = e.target.closest('.seg.years button[data-year]'); if (b) setYear(b.dataset.year); });
@@ -1203,15 +1222,16 @@ function bindBarTips() {
 }
 const sumC = (L, y = S.year) => L.reduce((a, i) => a + i.y[y].c, 0);
 function flagTags(i) {
-  if (!i.ns && !i.basket) return '';
-  return `<span class="tags">${i.ns ? `<span class="flag ns" title="National-security sector: ${esc(NS_HEADINGS[i.hs8.slice(0, 4)])}. The SCV framework may treat it as critical whatever its PCI.">Security sector</span>` : ''}${i.basket ? '<span class="flag bk" title="Residual &quot;other&quot; line: its PCI is an average for a mixed group of products, so read its verdict with care.">Basket line</span>' : ''}</span>`;
+  const w = R(i).watch;
+  if (!i.ns && !i.basket && !w) return '';
+  return `<span class="tags">${w ? '<span class="flag wl" title="Watch list: 70% or more dependence on a product with a PCI of 1 or more, but below the RIF threshold. Needs a case-by-case look.">Watch list</span>' : ''}${i.ns ? `<span class="flag ns" title="National-security sector: ${esc(NS_HEADINGS[i.hs8.slice(0, 4)])}. The SCV framework may treat it as critical whatever its PCI.">Security sector</span>` : ''}${i.basket ? '<span class="flag bk" title="Residual &quot;other&quot; line: its PCI is an average for a mixed group of products, so read its verdict with care.">Basket line</span>' : ''}</span>`;
 }
 // Concept terms: hover for the glossary definition, click to open it on the Methodology page in a new tab
 const TERMS = {
   critical: 'Critical vulnerability', strategic: 'Strategic vulnerability', dependence: 'Dependence (D), percentage',
   depfilter: 'Dependence filter', rif: 'Relative Impact Factor (RIF)', pci: 'Product Complexity Index (PCI)',
   opp: 'Low-complexity dependence', na: 'Not assessed', shock: 'Scale of disruption (immediate shock)', duration: 'Duration of disruption',
-  hs: 'Harmonised System (HS)', scv: 'SCV framework', nsflag: 'National-security flag', basket: 'Basket line', derisking: 'De-risking', tradedep: 'Dependence', vuln: 'Vulnerability',
+  hs: 'Harmonised System (HS)', scv: 'SCV framework', nsflag: 'National-security flag', basket: 'Basket line', derisking: 'De-risking', tradedep: 'Dependence', vuln: 'Vulnerability', watch: 'Watch list',
 };
 // Disclaimer for every place a disruption duration is drawn from PCI
 const DUR_NOTE = `These durations are indicative. PCI shows how hard a product is to replace. It does not forecast how long a real disruption would last.`;
@@ -1230,7 +1250,7 @@ function sideSelect(groups, cur) {
   return `<label class="side-select"><span>On this page</span><select onchange="location.hash = this.value">${groups.map(([l, items]) => `<optgroup label="${esc(l)}">${items.map(x => `<option value="${x.href}"${x.id === cur ? ' selected' : ''}>${x.n ? `${x.n}. ` : ''}${esc(x.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
 }
 // The matrix and the bubble chart, one click from every sidebar
-const JUMPS = [{ id: 'j-matrix', label: 'Vulnerability matrix', href: '#overview?ch=5&at=matrix' }, { id: 'j-chart', label: 'Bubble chart', href: '#overview?ch=5&at=chart' }, { id: 'j-trends', label: 'Four-year trends', href: '#overview?ch=6' }];
+const JUMPS = [{ id: 'j-matrix', label: 'Vulnerability matrix', href: '#overview?ch=5&at=matrix' }, { id: 'j-chart', label: 'Bubble chart', href: '#overview?ch=5&at=chart' }, { id: 'j-watch', label: 'Watch list', href: '#overview?ch=6' }, { id: 'j-trends', label: 'Four-year trends', href: '#overview?ch=7' }];
 function pnHTML(prev, next) {
   return `<nav class="pn" aria-label="Previous and next">${prev ? `<a class="btn" href="${prev.href}">← ${esc(prev.label)}</a>` : '<span></span>'}${next ? `<a class="btn primary" href="${next.href}">${esc(next.label)} →</a>` : ''}</nav>`;
 }
@@ -1244,6 +1264,7 @@ const CHAPTERS = [
   { t: 'How big a disruption', k: 'scale of disruption rif immediate shock severe major substantial 0.01' },
   { t: 'How long it would last', k: 'duration of disruption pci complexity short-term long-term horizon' },
   { t: 'The verdict', k: 'vulnerability matrix verdict critical strategic low complexity not assessed' },
+  { t: 'Small but acute', k: 'watch list small but acute below rif threshold acute dependence complex pci critical uses sparse quantities case by case' },
   { t: 'Four-year trends', k: 'trends four years 2022 2026 what changed growth imports items dependence grades vulnerability grown' },
   { t: 'Which items moved', k: 'items moved matrix change persistent newly vulnerable no longer vulnerable largest rise in dependence year on year' },
 ];
@@ -1309,6 +1330,7 @@ const CH_RENDER = [
         ${row(g.vul, `potentially render India strategically or critically vulnerable: ${int(s.crit)} critical, ${int(s.strat)} strategic`, 'Step 2 · Duration of disruption', '#4a0a2d', 5)}
         <p class="fn-step3">Set aside at this step: ${int(s.n.opp)} items of ${term('opp', 'low-complexity dependence')}, which India can more easily buy elsewhere as part of ${term('derisking', 'de-risking')}, and ${int(s.n.na)} items ${term('na', 'not yet assessed')} because they have no PCI score.</p>
         <p class="fn-step3">Step 3 · The ${int(g.vul)} ${term('strategic', 'strategic')} and ${term('critical', 'critical')} items go forward to the qualitative ${term('scv', 'SCV tests')}. Of the ${int(g.passed)} items that pass both filters, ${int(g.passedItems.filter(i => i.ns).length)} are in ${term('nsflag', 'national-security sectors')}, which the SCV framework may treat as critical whatever their PCI. <a href="#methodology?s=scv">How the tests work</a></p>
+        <p class="fn-step3">Also flagged: ${int(ITEMS.filter(i => i.y[y].watch).length)} items on the ${term('watch', 'watch list')}, where India depends on China for 70% or more of a complex product whose imports are too small to pass the RIF threshold. <a href="#overview?ch=6">See the watch list</a></p>
       </div>
       <div class="cta"><a class="btn primary" href="#overview?ch=1">Start: ${CHAPTERS[1].t} →</a><a class="btn" href="#overview?ch=5">Skip to the verdict</a></div>`;
   },
@@ -1376,6 +1398,23 @@ const CH_RENDER = [
       ${verdictChartHTML(y)}`;
   },
   // 6 and 7. Four-year trends (the overall picture) and which items moved (the item-level detail)
+  // 6. Watch list: acute dependence on complex products that are too small to pass the RIF threshold
+  (y, s, py) => {
+    const W = k => ITEMS.filter(i => i.y[k].watch);
+    const L = W(y).sort((a, b) => b.pci - a.pci || b.y[y].d - a.y[y].d), v = L.reduce((a, i) => a + i.y[y].c, 0);
+    const mx = Math.max(...YEARS.map(k => W(k).length));
+    const cols = YEARS.map(k => { const n = W(k).length; return `<div class="yc${k === y ? ' on' : ''}"><span class="yv">${int(n)}</span><span class="yb wl" style="height:${(n / mx * 120).toFixed(0)}px"></span><span class="yl">${FY[k]}</span></div>`; }).join('');
+    return `<div class="ch-grid"><div class="ch-text">${kick('Beyond the thresholds · Watch list')}
+      <h1>Which small imports still need attention?</h1>
+      <p>The ${term('rif', 'RIF')} threshold sets aside items whose imports are too small to cause a meaningful shock. But some complex products have critical uses in small quantities. The ${term('watch', 'watch list')} keeps them in view: items with 70% or more dependence on China and a PCI of 1 or more, whose RIF is below 0.01.</p>
+      ${figs([[int(L.length), `items on the watch list in ${FY[y]}`], [usd(v), 'of imports from China in these items'],
+        [int(L.filter(i => i.y[y].d >= 90).length), 'items China supplies almost entirely (90% or more)'], [int(L.filter(i => i.pci >= 1.75).length), 'items with Very High or Extremely High complexity (PCI 1.75 or more)']])}
+      <p>The watch list is not a verdict. Each item needs a case-by-case look at what it is used for. Items with less than 70% dependence, an RIF below 0.01 and a PCI below 1 are not flagged, because India has other suppliers, the shock would be small, and many countries make the product.</p>
+      <p class="vis-t" style="margin-top:18px">Watch-list items by year</p><div class="ycols small">${cols}</div>
+      <p class="ch-links"><a href="#explorer?tab=watch">See all ${int(L.length)} in the Explorer →</a><a href="#methodology?s=watch">Read the method</a></p>
+      </div><div class="ch-vis"><p class="vis-t">Most complex items on the watch list, ${FY[y]}</p><p class="vis-s">Highest PCI first. Select an item for its full record.</p>
+      <ol class="mini wl">${L.slice(0, 12).map(i => miniRow(i, 'below', `PCI ${pciFmt(i.pci)}`, `Dependence ${pct(i.y[y].d)} · ${usd(i.y[y].c)} from China`)).join('')}</ol></div></div>`;
+  },
   (y, s, py) => trendsHTML(y, py, 'overall'),
   (y, s, py) => trendsHTML(y, py, 'items'),
 ];
@@ -1455,12 +1494,13 @@ function trendsHTML(y, py, part) {
   }
 }
 const CH_BIND = { 3: bindBasis, 4: bindBasis, 5: app => { bindMatrix(app); drawScatter(ITEMS.filter(i => R(i).cat !== 'below')); },
-  7: app => $$('ol.mini', app).forEach(ol => ol.addEventListener('click', e => { const li = e.target.closest('li[data-hs8]'); if (li) openDetail(li.dataset.hs8); })) };
+  6: bindMini, 8: bindMini };
+function bindMini(app) { $$('ol.mini', app).forEach(ol => ol.addEventListener('click', e => { const li = e.target.closest('li[data-hs8]'); if (li) openDetail(li.dataset.hs8); })); }
 
 PAGES.overview = (app, side) => {
   const y = S.year, s = STATS[y], py = other(y), p = py ? STATS[py] : null, n = S.ch;
   const items = CHAPTERS.map((ch, k) => chLink(k));
-  side.innerHTML = yearSeg() + sideLinks('The story, in seven steps', items, n) + sideLinks('Jump to', JUMPS) + sideSelect([['The story', items], ['Jump to', JUMPS]], n) + sideMeta();
+  side.innerHTML = yearSeg() + sideLinks('The story, in eight steps', items, n) + sideLinks('Jump to', JUMPS) + sideSelect([['The story', items], ['Jump to', JUMPS]], n) + sideMeta();
   app.innerHTML = `<div class="chapter ch-${n}">${CH_RENDER[n](y, s, py, p)}${n ? pnHTML(chLink(n - 1), n < CHAPTERS.length - 1 ? chLink(n + 1) : null) : ''}</div>`;
   CH_BIND[n]?.(app);
 };
@@ -1628,6 +1668,8 @@ const XTABS = [
       return `${term('opp', 'Low-complexity dependence')}: these items pass both thresholds but have low product complexity, with a PCI below 1. Many countries export them, so India can more easily find other suppliers. This does not mean India can easily make them itself, because their inputs may still be complex. ${int(L.filter(i => R(i).rc === 'ext').length)} of these items carry a Severe RIF. ${int(L.filter(i => i.ns).length)} are in ${term('nsflag', 'national-security sectors')}, which the SCV framework may treat as critical whatever their PCI.`; } },
   { id: 'na', label: 'Not assessed', fill: '#6f6a66', test: r => r.cat === 'na', bands: [],
     note: () => `${term('na', 'Not assessed')}: these items pass both thresholds but have no PCI score yet, so they cannot be classified.` },
+  { id: 'watch', label: 'Watch list', fill: '#4f6d8a', test: r => r.watch, bands: [],
+    note: () => `${term('watch', 'Watch list')}: India depends on China for 70% or more of these items, and they are complex products, with a PCI of 1 or more. Their imports are too small to pass the RIF threshold, so they are not in the matrix. Some may still have critical uses, so each needs a case-by-case look.` },
   { id: 'all', label: 'All items', fill: '#171413', test: () => true, bands: [],
     note: () => `This tab lists every HS8 line in the trade data, including items below the thresholds. India imported ${int(ITEMS.filter(i => R(i).t > 0).length)} of them in ${FY[S.year]}.` },
 ];
@@ -1780,6 +1822,7 @@ const GLOSSARY = [
   ['National security test', 'Kumar 2023; Kumar 2025', 'A test for critical vulnerability: whether the dependence lies in sectors such as electricity grids, communications, satellites, banking and finance, digital infrastructure, or command, control, communications, computers, intelligence, surveillance and reconnaissance (C4ISR).'],
   ['Non-strategic vulnerability (NSV)', 'Kumar 2023', 'Any vulnerability that is not strategic.'],
   ['Not assessed', 'Observatory', 'An item that passes the dependence filter and the RIF threshold but has no HS6 PCI score, so its verdict cannot yet be set.'],
+  ['Watch list', 'Observatory', 'Items with acute dependence on China (70% or more) and a PCI of 1 or more, whose imports are too small to pass the RIF threshold of 0.01. They are outside the matrix, but some may have critical uses in small quantities, so they are flagged for a case-by-case assessment.'],
   ['Product Complexity Index (PCI)', 'Kumar 2025', 'A measure developed by Hidalgo and Hausmann (2009) that ranks traded products by the diversity and sophistication of the know-how needed to make them. In the RIF-PCI scale it indicates the period of disruption, through substitutability and the capability gap.'],
   ['Progression through elimination', 'Kumar 2025', 'The method of moving through successive filters and eliminating items at each step, so that every item left is worthy of scrutiny and can be prioritised.'],
   ['Relative Impact Factor (RIF)', 'Kumar 2025; Observatory', 'Imports from China (US$ mn) × Dependence (%) ÷ 10,000. RIF is an indicator of the scale of disruption (immediate shock). It rises with the value of imports from China, which shows how much of the economy relies on that supply, and with the share of dependence, which shows how much of that supply would be lost at once. It is also the closest indicator of incidence and cascading effects. The classes are Insignificant (below 0.01, set aside), Substantial (0.01 to below 0.1), Major (0.1 to below 1) and Severe (1 and above).'],
@@ -1920,6 +1963,13 @@ const METH = [
       <div class="scroll-x keytable"><table class="data"><thead><tr><th>HS4</th><th>Heading</th></tr></thead><tbody>
         ${Object.entries(NS_HEADINGS).map(([h, d]) => `<tr><td class="mono">${h}</td><td>${esc(d)}</td></tr>`).join('')}
       </tbody></table></div>` },
+  { id: 'watch', g: 'Reference', t: 'Watch list: small but acute', s: 'Watch list', h: () => `
+      <p>The RIF threshold sets aside items whose imports are too small to cause a meaningful shock. That carries a risk. Some products have critical uses but are needed only in small quantities, so their RIF stays below 0.01 even when India depends on China for almost all of them.</p>
+      <p>The watch list catches these items. An item is on it when all three of these hold:</p>
+      <ul><li>Dependence on China is 70% or more (Acute).</li><li>The PCI is 1 or more, so the product is complex and few countries make it.</li><li>The RIF is below 0.01, so the item falls outside the matrix.</li></ul>
+      <p>For these items, the RIF matters little. What matters is how dependent India is and how hard the product is to replace.</p>
+      <p>Items that miss on all three counts are not flagged. With dependence below 70%, India already buys part of its supply elsewhere. With an RIF below 0.01, a cut-off would be a small shock. And with a PCI below 1, many countries make the product.</p>
+      <p>The watch list is a prompt for a case-by-case assessment, not a verdict. Each item needs a look at what it is used for.</p>` },
   { id: 'lowc', g: 'Reference', t: 'Low complexity and basket lines', s: 'Low complexity and baskets', h: () => `
       <h2>Low-complexity dependence</h2>
       <p>These lines pass both thresholds but have a PCI below 1. The shock is real, but the products are simple to make by world standards. Many countries export them, so India can more easily find other suppliers.</p>
@@ -2099,6 +2149,7 @@ function openDetail(hs8) {
       <div><div class="k">Substitutability (indicative)</div><div class="v">${band && CAT[band].disr ? CAT[band].disr : band === 'opp' ? 'Shortest: many alternative suppliers' : 'n/a'}</div></div>
     </div>
     ${i.ns ? `<p class="dr-flag ns">This item is in a <b>national-security sector</b>: ${esc(NS_HEADINGS[i.hs8.slice(0, 4)])}. The SCV framework may treat it as a critical vulnerability, whatever its PCI.</p>` : ''}
+    ${R(i).watch ? '<p class="dr-flag wl"><b>Watch list.</b> India depends on China for 70% or more of this item, and the product is complex (PCI of 1 or more). Its imports are too small to pass the RIF threshold, so it is not in the matrix. It may still have critical uses and needs a case-by-case look.</p>' : ''}
     ${i.basket ? '<p class="dr-flag bk"><b>Basket line.</b> This is a residual "other" line. Its PCI is an average for a mixed group of products, so read its verdict with care.</p>' : ''}
     <h3>By year</h3>
     <div class="scroll-x"><table class="data years"><thead><tr><th></th>${YEARS.map(y => `<th class="n">${FY[y].slice(3)}</th>`).join('')}</tr></thead><tbody>
