@@ -864,6 +864,15 @@ table.matrix th.corner .cx-s { bottom: 8px; left: 9px; text-align: left; }
 .yc .yb.wl { background: #c3cfdb; }
 .yc.on .yb.wl { background: #4f6d8a; }
 ol.mini.wl li { --cc: #4f6d8a !important; }
+/* Contact form */
+.cf { display: grid; gap: 14px; max-width: 640px; margin-top: 18px; }
+.cf label { display: grid; gap: 5px; font-size: 13.5px; font-weight: 600; }
+.cf label small { font-weight: 400; color: var(--ink-50); }
+.cf input, .cf select, .cf textarea { font: inherit; font-size: 15px; font-weight: 400; padding: 8px 10px; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); border-radius: 0; }
+.cf textarea { resize: vertical; }
+.cf .btn { justify-self: start; }
+.copyright-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.copyright-footer .f-sep { margin: 0 8px; }
 </style>
 </head>
 <body>
@@ -905,7 +914,7 @@ ol.mini.wl li { --cc: #4f6d8a !important; }
 </div>
 <aside id="drawer" aria-hidden="true" aria-label="Commodity detail" tabindex="-1"></aside>
 <div id="scrim"></div>
-<footer class="copyright-footer">© 2026 Amit Kumar · Takshashila Institution</footer>
+<footer class="copyright-footer">© 2026 Amit Kumar · Takshashila Institution<span class="f-sep">·</span><a href="#methodology?s=contact">Suggest an update</a></footer>
 
 <script>
 /*CORE-START*/
@@ -2012,6 +2021,16 @@ const METH = [
         <li><strong>Product Complexity Index:</strong> Observatory of Economic Complexity, HS 2022 series, 2024 scores; C.A. Hidalgo and R. Hausmann, “The building blocks of economic complexity”, <em>PNAS</em> 106, no. 26 (2009).</li>
       </ul>
       <p class="cap">Data updated ${esc(DATA.meta.generated)}.</p>` },
+  { id: 'contact', g: 'Reference', t: 'Suggest an update or get in touch', s: 'Contact and suggestions', h: () => `
+      <p>Spotted an error in an item, have data that would improve an assessment, or want to discuss the work? Write to Amit Kumar at <strong>amit[at]takshashila[dot]org[dot]in</strong>, or use the form below.</p>
+      <form class="cf" id="cf" novalidate>
+        <label>What is this about?<select id="cfType"><option>A correction to an item</option><option>A suggestion for the method</option><option>New data or a source</option><option>Something else</option></select></label>
+        <label>HS8 code <small>(optional, if it concerns an item)</small><input id="cfHs8" inputmode="numeric" maxlength="8" placeholder="e.g. 85076000"></label>
+        <label>Your message<textarea id="cfMsg" rows="6" placeholder="Tell us what should change, and why."></textarea></label>
+        <label>Your name and organisation <small>(optional)</small><input id="cfName"></label>
+        <button class="btn primary" type="submit">Open in your email app</button>
+        <p class="cap">The button opens your email app with the message ready to send. Nothing is sent from this page, and nothing you type here is stored.</p>
+      </form>` },
 ];
 const methLink = x => ({ id: x.id, label: x.s, href: `#methodology?s=${x.id}` });
 
@@ -2026,6 +2045,19 @@ PAGES.methodology = (app, side) => {
       ${sec.h()}
       ${pnHTML(i > 0 ? methLink(METH[i - 1]) : null, i < METH.length - 1 ? methLink(METH[i + 1]) : null)}
     </article>`;
+  const cf = $('#cf');
+  if (cf) {
+    const hs = new URLSearchParams(location.hash.split('?')[1] || '').get('hs8');
+    if (hs && BY_HS8.has(hs)) { $('#cfHs8').value = hs; $('#cfType').selectedIndex = 0; }
+    cf.addEventListener('submit', e => {
+      e.preventDefault();
+      // The address is assembled here so it never appears whole in the page text
+      const to = ['amit', 'takshashila.org.in'].join('@'), code = $('#cfHs8').value.trim(), it = BY_HS8.get(code);
+      const subject = `Observatory: ${$('#cfType').value}${code ? ` (HS8 ${code})` : ''}`;
+      const body = [$('#cfMsg').value.trim(), '', code ? `Item: ${code}${it ? ` ${it.name}` : ''}` : '', $('#cfName').value.trim() ? `From: ${$('#cfName').value.trim()}` : '', `Page: ${location.href}`].filter((x, k) => x || k === 1).join('\n');
+      location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  }
   const gq = $('#gq');
   if (gq) gq.addEventListener('input', e => {
     const q = e.target.value.trim().toLowerCase();
@@ -2161,7 +2193,7 @@ function openDetail(hs8) {
       ${rows.map(([k, f]) => `<tr><td>${k}</td>${YEARS.map(y => `<td class="n">${f(i.y[y])}</td>`).join('')}</tr>`).join('')}
     </tbody></table></div>
     ${sib.length ? `<h3>Other lines under HS6 ${i.hs6}</h3>${sib.map(x => `<button type="button" class="sib" data-hs8="${x.hs8}"><span class="mono">${x.hs8}</span>${esc(x.name)} ${badge(R(x).cat)}</button>`).join('')}` : ''}
-    <p class="cap" style="margin-top:22px"><a href="#explorer?q=${i.hs6}">Open HS6 ${i.hs6} in the Vulnerability Explorer</a></p>`;
+    <p class="cap" style="margin-top:22px"><a href="#explorer?q=${i.hs6}">Open HS6 ${i.hs6} in the Vulnerability Explorer</a> · <a href="#methodology?s=contact&hs8=${i.hs8}">Suggest a correction to this item</a></p>`;
   dr.classList.add('open');
   dr.setAttribute('aria-hidden', 'false');
   document.body.classList.add('locked');
