@@ -873,6 +873,43 @@ ol.mini.wl li { --cc: #4f6d8a !important; }
 .cf .btn { justify-self: start; }
 .copyright-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .copyright-footer .f-sep { margin: 0 8px; }
+
+/* Alternative suppliers */
+.sp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 10px; }
+.sp-cols h4 { font: 500 11px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-50); margin: 0 0 6px; }
+.sp-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 46px; gap: 8px; align-items: center; font-size: 13px; padding: 3px 0; }
+.sp-row > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-row b { font-weight: 500; text-align: right; }
+.sp-bar { height: 8px; background: #ebe6e1; display: block; }
+.sp-bar i { display: block; height: 100%; background: var(--ink-50); }
+.sp-row.cn .sp-bar i { background: var(--wine); }
+.sp-row.cn > span:first-child { font-weight: 600; color: var(--wine); }
+.sp-sum { font-size: 14px; margin: 14px 0 0; padding: 8px 10px; border-left: 3px solid #2f6b6b; background: #eef4f4; }
+.tier.alt i.on { background: #2f6b6b; }
+.alt-l { font-weight: 500; }
+.alt-na { color: var(--ink-50); font-weight: 400; }
+.sp-chap .sp-row { grid-template-columns: 132px minmax(0, 1fr) 40px; font-size: 14px; padding: 5px 0; }
+.dbar.wx { position: relative; overflow: visible; }
+.dbar.wx::after { content: ''; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--ink); }
+.sp-chap .sp-grp { margin-top: 16px; }
+.sp-chap .sp-grp .vis-t { margin-bottom: 4px; }
+.sp-tabs { display: flex; gap: 0; margin: 2px 0 12px; }
+.sp-tabs .btn { flex: 0 0 auto; }
+@media (max-width: 640px) { .sp-cols { grid-template-columns: 1fr; gap: 16px; } }
+/* Drawer 'By year' table: let long cells (Matrix cell) wrap so all four years fit */
+table.data.years { table-layout: fixed; }
+table.data.years th:first-child, table.data.years td:first-child { width: 23%; }
+table.data.years th, table.data.years td { padding: 6px 4px; overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
+table.data.years td.n { white-space: normal; }
+table.data.years .badge { white-space: normal; display: inline-block; max-width: 100%; padding-left: 4px; padding-right: 4px; }
+@media (max-width: 640px) {
+  table.data.years th:first-child, table.data.years td:first-child { width: 24%; }
+  table.data.years th, table.data.years td { padding: 6px 3px; font-size: 10px; }
+  table.data.years th { letter-spacing: 0; font-size: 10px; }
+  table.data.years .badge { letter-spacing: 0; font-size: 8px; padding-left: 2px; padding-right: 2px; }
+  table.data.years .badge .b-band { font-size: 8.5px; }
+}
+td.n .sub { white-space: normal; max-width: 140px; margin-left: auto; }
 </style>
 </head>
 <body>
@@ -1011,7 +1048,7 @@ const NS_HEADINGS = {
 const isBasket = (hs8, name) => /9\d$/.test(hs8) || /^\W*(OTHERS?|OTHR|OTHE|0THERS?)\b/i.test(name) || /OTHERS-OF/i.test(name);
 const PAPER_URL = 'https://takshashila.org.in/content/publications/assets/Derisking-Indias-Trade-With-China.pdf';
 
-let DATA, ITEMS, BY_HS8, BY_HS6;
+let DATA, ITEMS, BY_HS8, BY_HS6, SUP = null;
 const STATS = {};
 const charts = [];
 const S = {
@@ -1049,9 +1086,12 @@ function matrixText(r) {
 }
 
 /* ---------- Load ---------- */
-fetch('data.json', { cache: 'no-cache' })
-  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-  .then(init)
+// suppliers.json is optional: without it the Observatory works as before, minus the supplier panels
+Promise.all([
+  fetch('data.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+  fetch('suppliers.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null),
+])
+  .then(([d, sp]) => { SUP = sp; init(d); })
   .catch(err => {
     $('#app').innerHTML = `<p class="error">Could not load data.json (${esc(err.message)}). Serve this folder over http rather than opening the file directly.</p>`;
   });
@@ -1152,6 +1192,43 @@ function render() {
   $$('.seg.years button[data-year]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.year === S.year)));
 }
 
+
+/* ---------- Alternative suppliers: CEPII BACI, one calendar year, HS6 ---------- */
+const CN = '156';   // China's country code in BACI
+function sup(hs6) {
+  const h = SUP && SUP.hs6[hs6];
+  if (!h) return null;
+  if (h._p) return h._p;
+  const nm = c => SUP.meta.countries[c] || c;
+  const others = h.i.filter(x => x[0] !== CN), wothers = h.w.filter(x => x[0] !== CN);
+  const alt = h.iv <= 0 ? 'No data' : h.in >= 3 ? 'Many' : h.in >= 1 ? 'Few' : 'None';
+  return (h._p = { ...h, nm, alt, others, wothers, next: others[0] ? { n: nm(others[0][0]), s: others[0][1] } : null });
+}
+const TBL_KEYS = () => ['hs8', 'name', 'china', 'd', 'rif', 'pci'].concat(SUP ? ['alt'] : []);
+function suppHTML(i) {
+  const s = sup(i.hs6);
+  if (!s) return '';
+  const Y = SUP.meta.year;
+  const row = (n, v, cn) => `<div class="sp-row${cn ? ' cn' : ''}"><span title="${esc(n)}">${esc(n)}</span><span class="sp-bar"><i style="width:${Math.min(100, v).toFixed(1)}%"></i></span><b>${pct(v)}</b></div>`;
+  const panel = (title, cs, others) => {
+    const top = others.slice(0, 4);
+    const rest = Math.max(0, 100 - cs - top.reduce((a, x) => a + x[1], 0));
+    return `<div><h4>${title}</h4>${row('China', cs, 1)}${top.map(x => row(s.nm(x[0]), x[1])).join('')}${rest >= 0.05 ? row('All others', rest) : ''}</div>`;
+  };
+  const L = BY_HS6.get(i.hs6) || [];
+  const ct = L.reduce((a, x) => a + x.y['2025'].c, 0), tt = L.reduce((a, x) => a + x.y['2025'].t, 0);
+  const dep = tt > 0 ? ct / tt * 100 : null;
+  const gap = s.iv > 0 && dep != null && Math.abs(s.ic - dep) > 20;
+  const nx = s.wothers[0];
+  const sum = `<p class="sp-sum"><b>China supplies ${pct(s.wc)} of world exports of this product.</b> ${nx ? `The next-largest exporter, ${esc(s.nm(nx[0]))}, supplies ${pct(nx[1])}. ` : ''}${s.iv <= 0 ? `BACI records no imports of this product by India in ${Y}.` : `India bought ${pct(s.ic)} of it from China in ${Y}; ${s.in === 0 ? 'no other country' : `${s.in} other countr${s.in === 1 ? 'y' : 'ies'}`} provided 10% or more.`}</p>`;
+  return `<h3>Biggest suppliers of this product in ${Y}</h3>
+    <p class="cap" style="margin:0">HS6 ${i.hs6}. Calendar year ${Y}, the latest year in the source. Shares are of value.</p>
+    <div class="sp-cols">${s.iv > 0 ? panel('Where India bought it', s.ic, s.others) : ''}${panel('Who exports it to the world', s.wc, s.wothers)}</div>
+    ${sum}
+    ${gap ? `<p class="dr-flag bk">BACI and the Commerce data differ here. BACI puts China at ${pct(s.ic)} of India's ${Y} imports of this product, against ${pct(dep)} in the Commerce data above (${FY['2025']}). Read the supplier shares as a guide.</p>` : ''}
+    <p class="disclaim">Supplier data are published at HS6 level, so every HS8 line under HS6 ${i.hs6} shows the same suppliers. Source: CEPII BACI, calendar year ${Y}. BACI reconciles exporters' and importers' customs reports, so its figures can differ from the Commerce Ministry's HS8 data above. <a href="#methodology?s=suppliers" target="_blank" rel="noopener">How to read this</a></p>`;
+}
+
 /* ---------- Shared pieces ---------- */
 const COLS = {
   hs8:   { h: 'HS8', sort: i => i.hs8, cell: (i, r) => `<td class="code" style="--cc:${CAT[r.cat].fill === '#ffffff' ? 'var(--ink-20)' : CAT[r.cat].fill}">${i.hs8}</td>` },
@@ -1163,6 +1240,11 @@ const COLS = {
   rif:   { h: 'Scale (RIF)', n: 1, sort: (i, r) => r.rif, cell: (i, r) => `<td class="n"><span class="tier" title="${RIFNAME[r.rc]} scale of disruption" aria-label="${RIFNAME[r.rc]}">${[1, 2, 3].map(k => `<i class="${k <= ({ ins: 0, sub: 1, exp: 2, ext: 3 })[r.rc] ? 'on' : ''}"></i>`).join('')}</span>${rifFmt(r.rif)}</td>` },
   // PCI value first, like the RIF value beside it; the verdict badge sits underneath
   pci:   { h: 'Duration (PCI)', sort: i => i.pci ?? -99, cell: (i, r) => `<td><span class="pci-v">${pciFmt(i.pci)}</span>${badge(r.cat)}</td>` },
+  // China's share of the world's exports of the product, with the next-largest exporter beneath; the tick marks one half
+  alt:   { h: 'China in world exports', hh: 'China in world<br>exports', n: 1, sort: i => { const q = sup(i.hs6); return q ? q.wc : -1; }, cell: i => { const q = sup(i.hs6);
+    if (!q) return '<td class="n"></td>';
+    const nx = q.wothers[0];
+    return `<td class="n"><span class="dcell" title="China's share of world exports of this product in ${SUP.meta.year}. The tick marks one half."><span class="dbar wx" aria-hidden="true"><i style="width:${Math.min(100, q.wc).toFixed(1)}%"></i></span>${pct(q.wc)}</span>${nx ? `<span class="sub">Next: ${esc(q.nm(nx[0]))} ${pct(nx[1])}</span>` : ''}</td>`; } },
   cat:   { h: 'Category', sort: (i, r) => CAT_ORDER.indexOf(r.cat), cell: (i, r) => `<td>${badge(r.cat)}</td>` },
 };
 
@@ -1245,7 +1327,7 @@ const TERMS = {
   critical: 'Critical vulnerability', strategic: 'Strategic vulnerability', dependence: 'Dependence (D), percentage',
   depfilter: 'Dependence filter', rif: 'Relative Impact Factor (RIF)', pci: 'Product Complexity Index (PCI)',
   opp: 'Low-complexity dependence', na: 'Not assessed', shock: 'Scale of disruption (immediate shock)', duration: 'Duration of disruption',
-  hs: 'Harmonised System (HS)', scv: 'SCV framework', nsflag: 'National-security flag', basket: 'Basket line', derisking: 'De-risking', tradedep: 'Dependence', vuln: 'Vulnerability', watch: 'Watch list',
+  hs: 'Harmonised System (HS)', scv: 'SCV framework', nsflag: 'National-security flag', basket: 'Basket line', derisking: 'De-risking', tradedep: 'Dependence', vuln: 'Vulnerability', watch: 'Watch list', alt: 'Alternative suppliers',
 };
 // Disclaimer for every place a disruption duration is drawn from PCI
 const DUR_NOTE = `These durations are indicative. PCI shows how hard a product is to replace. It does not forecast how long a real disruption would last.`;
@@ -1281,6 +1363,7 @@ const CHAPTERS = [
   { t: 'Small but acute', k: 'watch list small but acute below rif threshold acute dependence complex pci critical uses sparse quantities case by case' },
   { t: 'Four-year trends', k: 'trends four years 2022 2026 what changed growth imports items dependence grades vulnerability grown' },
   { t: 'Which items moved', k: 'items moved matrix change persistent newly vulnerable no longer vulnerable largest rise in dependence year on year' },
+  { t: 'Where else India could buy', k: 'alternative suppliers other countries exporters baci substitutes no alternative few many where else could india buy watch list' },
 ];
 const chLink = n => ({ id: n, n, label: CHAPTERS[n].t, href: `#overview?ch=${n}` });
 const kick = t => `<p class="kicker">${t}</p>`;
@@ -1431,6 +1514,33 @@ const CH_RENDER = [
   },
   (y, s, py) => trendsHTML(y, py, 'overall'),
   (y, s, py) => trendsHTML(y, py, 'items'),
+  // 9. Who else supplies: China's share of world exports and India's other suppliers, for the items that matter; information only
+  (y, s) => {
+    if (!SUP) return `<div class="ch-text">${kick('Beyond the verdict · Who else supplies')}<h1>Where else could India buy?</h1><p>The supplier data could not be loaded.</p></div>`;
+    const Y = SUP.meta.year;
+    const V = ITEMS.filter(i => VULN.includes(i.y[y].cat)).sort((a, b) => b.y[y].rif - a.y[y].rif);
+    const W = ITEMS.filter(i => i.y[y].watch).sort((a, b) => b.pci - a.pci || b.y[y].d - a.y[y].d);
+    const wcOf = i => sup(i.hs6)?.wc ?? null;
+    const band = (L, lo, hi) => L.filter(i => { const w = wcOf(i); return w != null && w >= lo && w < hi; }).length;
+    const none = L => L.filter(i => { const q = sup(i.hs6); return q && q.iv > 0 && q.in === 0; }).length;
+    const BANDS = [['Under 25%', 0, 25], ['25% to under 50%', 25, 50], ['50% to under 75%', 50, 75], ['75% or more', 75, 101]];
+    const bar = (lab, n, tot) => `<div class="sp-row"><span>${lab}</span><span class="sp-bar"><i style="width:${(tot ? n / tot * 100 : 0).toFixed(1)}%;background:var(--wine)"></i></span><b>${int(n)}</b></div>`;
+    const grp = (L, title) => `<div class="sp-grp"><p class="vis-t">${title}</p>${BANDS.map(([l, lo, hi]) => bar(l, band(L, lo, hi), L.length)).join('')}</div>`;
+    const lst = (L, g, mk) => { const N = L.filter(i => wcOf(i) != null).sort((a, b) => wcOf(b) - wcOf(a));
+      return `<div class="sp-list" data-g="${g}"${g === 'w' ? ' hidden' : ''}><ol class="mini${g === 'w' ? ' wl' : ''}">${N.slice(0, 12).map(mk).join('') || '<li class="empty">None.</li>'}</ol>${N.length > 12 ? `<p class="vis-s" style="margin-top:8px">Showing the 12 highest of ${int(N.length)}. <a href="#explorer?tab=${g === 'w' ? 'watch' : 'vuln'}">See them all in the Explorer</a>, where the China in world exports column can be sorted.</p>` : ''}</div>`; };
+    const sub = i => { const q = sup(i.hs6), nx = q.wothers[0]; return `India: ${pct(i.y[y].d)} from China${nx ? ` · next exporter: ${esc(q.nm(nx[0]))} ${pct(nx[1])}` : ''}`; };
+    return `<div class="ch-grid sp-chap"><div class="ch-text">${kick('Beyond the verdict · Who else supplies')}
+      <h1>Where else could India buy?</h1>
+      <p>Dependence says how much India buys from China. It does not say who else sells the product. When China also supplies most of the world's exports, other buyers have little to offer. For every item, the Observatory now shows China's share of world exports and the biggest suppliers to India and to the world in ${Y}. Here they are for the items that matter most: those that potentially render India strategically or critically vulnerable, and those on the ${term('watch', 'watch list')}.</p>
+      ${figs([[int(band(V, 50, 101)), `of the ${int(V.length)} potentially vulnerable items are products where China supplies half or more of world exports`], [int(band(W, 50, 101)), `of the ${int(W.length)} watch-list items are the same`],
+        [int(none(V)), `of the ${int(V.length)} have no other supplier with 10% or more of India's imports`], [int(none(W)), `of the ${int(W.length)} watch-list items have none`]])}
+      ${grp(V, `Potentially vulnerable items by China's share of world exports`)}
+      ${grp(W, `Watch-list items by China's share of world exports`)}
+      <p class="disclaim">Supplier data are at HS6 level and refer to calendar year ${Y}, whichever financial year is selected. They show who supplies a product, not who is willing or able to supply India. This is for information only and does not change any verdict. <a href="#methodology?s=suppliers">How to read this</a></p>
+      </div><div class="ch-vis"><p class="vis-t">Where China dominates world supply, ${FY[y]}</p><p class="vis-s">Highest share of world exports first. Select an item for its suppliers.</p>
+      <div class="sp-tabs" role="group" aria-label="Item group"><button type="button" class="btn primary" data-spg="v">Potentially vulnerable</button><button type="button" class="btn" data-spg="w">Watch list</button></div>
+      ${lst(V, 'v', i => miniRow(i, i.y[y].cat, `China ${pct(wcOf(i))}`, sub(i)))}${lst(W, 'w', i => miniRow(i, 'below', `China ${pct(wcOf(i))}`, sub(i)))}</div></div>`;
+  },
 ];
 function trendsHTML(y, py, part) {
   {
@@ -1508,13 +1618,16 @@ function trendsHTML(y, py, part) {
   }
 }
 const CH_BIND = { 3: bindBasis, 4: bindBasis, 5: app => { bindMatrix(app); drawScatter(ITEMS.filter(i => R(i).cat !== 'below')); },
-  6: bindMini, 8: bindMini };
+  6: bindMini, 8: bindMini,
+  9: app => { bindMini(app); $$('[data-spg]', app).forEach(b => b.addEventListener('click', () => {
+    $$('[data-spg]', app).forEach(x => x.classList.toggle('primary', x === b));
+    $$('.sp-list', app).forEach(l => { l.hidden = l.dataset.g !== b.dataset.spg; }); })); } };
 function bindMini(app) { $$('ol.mini', app).forEach(ol => ol.addEventListener('click', e => { const li = e.target.closest('li[data-hs8]'); if (li) openDetail(li.dataset.hs8); })); }
 
 PAGES.overview = (app, side) => {
   const y = S.year, s = STATS[y], py = other(y), p = py ? STATS[py] : null, n = S.ch;
   const items = CHAPTERS.map((ch, k) => chLink(k));
-  side.innerHTML = yearSeg() + sideLinks('The story, in eight steps', items, n) + sideLinks('Jump to', JUMPS) + sideSelect([['The story', items], ['Jump to', JUMPS]], n) + sideMeta();
+  side.innerHTML = yearSeg() + sideLinks('The story, in nine steps', items, n) + sideLinks('Jump to', JUMPS) + sideSelect([['The story', items], ['Jump to', JUMPS]], n) + sideMeta();
   app.innerHTML = `<div class="chapter ch-${n}">${CH_RENDER[n](y, s, py, p)}${n ? pnHTML(chLink(n - 1), n < CHAPTERS.length - 1 ? chLink(n + 1) : null) : ''}</div>`;
   CH_BIND[n]?.(app);
 };
@@ -1587,7 +1700,7 @@ function renderCellList(cells) {
   const title = cellName(rc, col);
   el.innerHTML = `<h3 class="bd-h">${esc(title)}</h3>
     <p class="sec-note">These ${int(L.length)} ${L.length === 1 ? 'item accounts' : 'items account'} for ${usd(L.reduce((a, i) => a + R(i).c, 0))} of imports from China in ${FY[S.year]}. They are ranked by RIF, highest first. Disruption horizons are indicative and based on PCI.</p>
-    <div id="cellTable">${tableHTML(L.slice(page * size, (page + 1) * size), ['hs8', 'name', 'china', 'd', 'rif', 'pci'])}</div>
+    <div id="cellTable">${tableHTML(L.slice(page * size, (page + 1) * size), TBL_KEYS())}</div>
     ${pagerHTML(L.length, page, size, 'cell')}`;
   bindRows($('#cellTable'));
   $$('[data-pg="cell"]', el).forEach(b => b.addEventListener('click', () => { S.mPage += +b.dataset.d; renderCellList(cells); el.scrollIntoView({ block: 'start' }); }));
@@ -1752,7 +1865,7 @@ PAGES.explorer = (app, side) => {
       <div class="seg views" role="group" aria-label="View"><button type="button" data-view="table">Table</button><button type="button" data-view="chart">Chart</button></div></div>
     <p class="tab-note" id="exNote"></p>
     <div class="actions"><span><span class="count" id="exCount"></span><span class="sort-hint" id="exSortHint"></span></span>
-      <label class="sort-m">Sort by <select id="exSortM">${[['rif', 'Scale of disruption (RIF)'], ['china', 'Imports from China'], ['d', 'Dependence'], ['pci', 'Complexity (PCI)'], ['cat', 'Category'], ['name', 'Commodity'], ['hs8', 'HS8 code']].map(([k, t]) => `<option value="${k}"${S.ex.sort === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label></div>
+      <label class="sort-m">Sort by <select id="exSortM">${[['rif', 'Scale of disruption (RIF)'], ['china', 'Imports from China'], ['d', 'Dependence'], ['pci', 'Complexity (PCI)'], ...(SUP ? [['alt', 'China share of world exports']] : []), ['cat', 'Category'], ['name', 'Commodity'], ['hs8', 'HS8 code']].map(([k, t]) => `<option value="${k}"${S.ex.sort === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label></div>
     <div id="exBody"></div>`;
 
   $('#exTabs').addEventListener('click', e => {
@@ -1801,7 +1914,7 @@ function exUpdate() {
     $('#exBody').innerHTML = `<p class="vis-s chart-note">Each bubble is one item in the current selection: ${int(plotted)} items with a PCI score and imports from China. Across is complexity (PCI); up is scale of disruption (RIF, log scale); size is the value of imports from China. Dashed lines mark the matrix thresholds.${L.length - plotted ? ` ${int(L.length - plotted)} items without a PCI score or imports from China are left out.` : ''}</p><div class="chart-box"><canvas id="scatter" aria-label="Scatter of RIF against PCI"></canvas></div>`;
     drawScatter(L);
   } else {
-    $('#exBody').innerHTML = `<div id="exTable">${tableHTML(L.slice(page * size, (page + 1) * size), ['hs8', 'name', 'china', 'd', 'rif', 'pci'], { sortable: true, sort: S.ex.sort, dir: S.ex.dir, banded: true })}</div>${pagerHTML(L.length, page, size, 'ex')}`;
+    $('#exBody').innerHTML = `<div id="exTable">${tableHTML(L.slice(page * size, (page + 1) * size), TBL_KEYS(), { sortable: true, sort: S.ex.sort, dir: S.ex.dir, banded: true })}</div>${pagerHTML(L.length, page, size, 'ex')}`;
   }
   const p = new URLSearchParams();
   if (S.ex.tab !== 'vuln') p.set('tab', S.ex.tab);
@@ -1813,6 +1926,7 @@ function exUpdate() {
 /* ---------- Methodology ---------- */
 // Combined glossary: Kumar 2023 (IPPR) glossary, terms defined in Kumar 2025, and the Observatory's own terms
 const GLOSSARY = [
+  ['Alternative suppliers', 'Observatory', "Countries other than China that supply a product. For each HS6 product the Observatory shows China's share of world exports, the next-largest exporters, and India's own suppliers in 2024. It is shown for information only and changes no verdict."],
   ['Adversary test', 'Kumar 2023; Kumar 2025', 'The first test of the SCV framework: whether the dependence is on an adversary that has both the capability and the willingness to apply economic coercion to secure its strategic interests. Every line with dependence on China of 30% or more clears it by default.'],
   ['Basket line', 'Observatory', 'A residual "other" or "others of others" HS8 line. PCI is published only at HS6, so a basket line inherits an average across very different products, and its RIF may reflect the breadth of the basket rather than a single chokepoint. Basket lines are flagged so their verdicts can be read with care.'],
   ['Capability gap', 'Kumar 2023; Kumar 2025', 'A test for critical vulnerability: whether the adversary holds a technical lead in a sophisticated or specialised product that cannot be replicated or sourced elsewhere in the short to medium term. It looks at long-term consequences, beyond eighteen months.'],
@@ -1984,6 +2098,25 @@ const METH = [
       <p>For these items, the RIF matters little. What matters is how dependent India is and how hard the product is to replace.</p>
       <p>Items that miss on all three counts are not flagged. With dependence below 70%, India already buys part of its supply elsewhere. With an RIF below 0.01, a cut-off would be a small shock. And with a PCI below 1, many countries make the product.</p>
       <p>The watch list is a prompt for a case-by-case assessment, not a verdict. Each item needs a look at what it is used for.</p>` },
+  { id: 'suppliers', g: 'Reference', t: 'Alternative suppliers', s: 'Alternative suppliers', h: () => `
+      <p>For every item, the Observatory shows who supplied the product in the latest year of its source (${SUP ? SUP.meta.year : 2024}): the countries India bought it from, and the countries that exported it to the world. The figures come from BACI, the international trade database that CEPII, the French research centre for international economics, builds from customs reports to the United Nations. The Observatory of Economic Complexity draws on the same database.</p>
+      <p>This is information only. It does not change any item's verdict, threshold or count.</p>
+      <h2>What is shown</h2>
+      <ul>
+        <li><strong>China's share of world exports.</strong> How much of the world's exports of the product, by value, came from China. When one country supplies most of what the world sells, other buyers have little to turn to, so a high share means switching suppliers is harder. The bar's tick marks one half. The page also names the next-largest exporters, so you can see how deep the alternatives run.</li>
+        <li><strong>India's suppliers.</strong> The countries India bought the product from, and China's share of India's imports.</li>
+        <li><strong>Other suppliers to India.</strong> How many countries other than China each supplied 10% or more of India's imports. The 10% line is a judgement: a supplier below it provides too small a share of India's needs to count as a working alternative today.</li>
+      </ul>
+      <p>The Observatory shows these shares and sets no threshold on them.</p>
+      <h2>What to keep in mind</h2>
+      <ul>
+        <li><strong>HS6 only.</strong> BACI is published at HS6, so every HS8 line under an HS6 product shows the same suppliers.</li>
+        <li><strong>Calendar year.</strong> BACI covers calendar years and runs about a year behind. Supplier data refer to ${SUP ? SUP.meta.year : 2024} whichever financial year is selected.</li>
+        <li><strong>A different source.</strong> BACI reconciles exporters' and importers' customs reports and adjusts for freight and insurance, so its figures differ from the Commerce Ministry's HS8 data. They are usually close. Where China's share differs by more than 20 percentage points, the item page says so.</li>
+        <li><strong>Supply is not willingness.</strong> A country that exports a product may lack spare capacity, may be bound by sanctions or its own export controls, or may not sell to India. The figures show who supplies a product, not who could be persuaded to supply more.</li>
+        <li><strong>Trading hubs.</strong> Hong Kong, Singapore and similar hubs can appear as suppliers of goods made elsewhere, including in China.</li>
+        <li><strong>Taiwan.</strong> BACI records Taiwan as “Other Asia, nes”. It is shown here as Taiwan.</li>
+      </ul>` },
   { id: 'lowc', g: 'Reference', t: 'Low complexity and basket lines', s: 'Low complexity and baskets', h: () => `
       <h2>Low-complexity dependence</h2>
       <p>These lines pass both thresholds but have a PCI below 1. The shock is real, but the products are simple to make by world standards. Many countries export them, so India can more easily find other suppliers.</p>
@@ -2019,6 +2152,7 @@ const METH = [
       <ul>
         <li><strong>Trade data:</strong> total imports and imports from China by HS8 line, FY 2022-23 to FY 2025-26, TradeStat EIDB, Ministry of Commerce and Industry, Government of India. Values in US$ million.</li>
         <li><strong>Product Complexity Index:</strong> Observatory of Economic Complexity, HS 2022 series, 2024 scores; C.A. Hidalgo and R. Hausmann, “The building blocks of economic complexity”, <em>PNAS</em> 106, no. 26 (2009).</li>
+        <li><strong>Suppliers:</strong> imports by country of origin and world exports by exporting country, HS6 level, calendar year ${SUP ? SUP.meta.year : 2024}, from BACI (CEPII, HS 2022 edition, version 202601), under the Etalab Open Licence 2.0. G. Gaulier and S. Zignago, “BACI: International Trade Database at the Product-Level. The 1994-2007 Version”, <em>CEPII Working Paper</em> 2010-23.</li>
       </ul>
       <p class="cap">Data updated ${esc(DATA.meta.generated)}.</p>` },
   { id: 'contact', g: 'Reference', t: 'Suggest an update or get in touch', s: 'Contact and suggestions', h: () => `
@@ -2192,6 +2326,7 @@ function openDetail(hs8) {
     <div class="scroll-x"><table class="data years"><thead><tr><th></th>${YEARS.map(y => `<th class="n">${FY[y].slice(3)}</th>`).join('')}</tr></thead><tbody>
       ${rows.map(([k, f]) => `<tr><td>${k}</td>${YEARS.map(y => `<td class="n">${f(i.y[y])}</td>`).join('')}</tr>`).join('')}
     </tbody></table></div>
+    ${suppHTML(i)}
     ${sib.length ? `<h3>Other lines under HS6 ${i.hs6}</h3>${sib.map(x => `<button type="button" class="sib" data-hs8="${x.hs8}"><span class="mono">${x.hs8}</span>${esc(x.name)} ${badge(R(x).cat)}</button>`).join('')}` : ''}
     <p class="cap" style="margin-top:22px"><a href="#explorer?q=${i.hs6}">Open HS6 ${i.hs6} in the Vulnerability Explorer</a> · <a href="#methodology?s=contact&hs8=${i.hs8}">Suggest a correction to this item</a></p>`;
   dr.classList.add('open');
