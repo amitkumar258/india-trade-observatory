@@ -36,7 +36,7 @@
  "description": "Maps India's trade dependence on China across every HS8 item it imports, identifies where that dependence potentially renders India strategically or critically vulnerable, and points to de-risking options using the RIF-PCI scale and the Strategic and Critical Vulnerability (SCV) framework.",
  "url": "https://indiatradeobservatory.amitkumar-ak.com/",
  "keywords": ["India China trade", "trade dependence", "import dependence on China", "trade vulnerability", "strategic vulnerability", "critical vulnerability", "de-risking", "RIF-PCI", "HS8"],
- "creator": {"@type": "Person", "name": "Amit Kumar", "affiliation": {"@type": "Organization", "name": "Takshashila Institution"}},
+ "creator": {"@type": "Person", "name": "Amit Kumar", "url": "https://amitkumar-ak.com/", "affiliation": {"@type": "Organization", "name": "Takshashila Institution"}},
  "spatialCoverage": "India", "temporalCoverage": "2022-04/2026-03",
  "isBasedOn": ["https://doi.org/10.55763/ippr.2023.04.04.003", "https://takshashila.org.in/content/publications/assets/Derisking-Indias-Trade-With-China.pdf"]}
 </script>
@@ -730,6 +730,15 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
   .sorter .g-f1, .sorter .g-s1 { margin-left: 34px; }
   .sorter .g-d2, .sorter .g-d3 { margin-top: 14px; }
 }
+/* About the author: a photo and a short bio */
+.author .au-row { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 0 34px; align-items: start; margin-top: 6px; }
+.author .au-photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border: var(--rule); background: var(--deep); }
+.author h1 { margin: 0 0 4px; }
+.author .au-role { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wine); margin: 0 0 14px; }
+.author .au-text p { font-size: 15.5px; line-height: 1.55; max-width: 60ch; }
+.author .au-text p.au-role { font-size: 11px; }
+.author .au-go { margin: 18px 0 14px; }
+@media (max-width: 640px) { .author .au-row { grid-template-columns: 1fr; gap: 18px 0; } .author .au-photo { width: 168px; } }
 /* About: the three concerns as tabs; vulnerabilities (this Observatory) opens first */
 .about .ab-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 22px 0 0; }
 .about .ab-tab { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center; text-align: left; font: inherit; color: var(--ink-50); background: var(--deep); border: var(--rule); border-top: 4px solid var(--ink-20); margin-left: -1px; padding: 10px 14px 9px; cursor: pointer; }
@@ -1161,7 +1170,7 @@ td.n .sub.ease .tier { margin-right: 6px; }
 </div>
 <aside id="drawer" aria-hidden="true" aria-label="Commodity detail" tabindex="-1"></aside>
 <div id="scrim"></div>
-<footer class="copyright-footer">© 2026 Amit Kumar · Takshashila Institution<span class="f-sep">·</span><a href="#about">About</a><span class="f-sep">·</span><a href="#methodology?s=contact">Suggest an update</a></footer>
+<footer class="copyright-footer"><span>© 2026 <a href="#author">Amit Kumar</a> · Takshashila Institution</span><span class="f-sep">·</span><a href="#about">About</a><span class="f-sep">·</span><a href="#methodology?s=contact">Suggest an update</a></footer>
 
 <script>
 /*CORE-START*/
@@ -1418,7 +1427,7 @@ function route() {
 }
 
 function render() {
-  $$('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.page === S.page));
+  $$('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.page === (S.page === 'author' ? 'about' : S.page)));
   while (charts.length) charts.pop().destroy();
   PAGES[S.page]($('#app'), $('#side'));
   $$('.seg.years button[data-year]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.year === S.year)));
@@ -2756,9 +2765,9 @@ PAGES.methodology = (app, side) => {
 };
 
 /* ---------- About: the three concerns in India-China trade, and which one this Observatory addresses ---------- */
+const ABOUT_GO = [{ id: 'about', label: 'About this Observatory', href: '#about' }, { id: 'author', label: 'About the author', href: '#author' }, { id: 'story', label: 'Story map', href: '#methodology?s=story' }, { id: 'method', label: 'The method', href: '#methodology?s=about' }, { id: 'explorer', label: 'Vulnerability Explorer', href: '#explorer' }, { id: 'glance', label: 'At a Glance', href: '#overview' }];
 PAGES.about = (app, side) => {
-  const go = [{ id: 'about', label: 'About this Observatory', href: '#about' }, { id: 'story', label: 'Story map', href: '#methodology?s=story' }, { id: 'method', label: 'The method', href: '#methodology?s=about' }, { id: 'explorer', label: 'Vulnerability Explorer', href: '#explorer' }, { id: 'glance', label: 'At a Glance', href: '#overview' }];
-  side.innerHTML = sideLinks('Go to', go, 'about') + sideSelect([['Go to', go]], 'about');
+  side.innerHTML = sideLinks('Go to', ABOUT_GO, 'about') + sideSelect([['Go to', ABOUT_GO]], 'about');
   // Vulnerabilities is the Observatory's own concern, so it opens first; the other two sit in the backdrop
   const strands = [
     { id: 'imbalance', n: 1, t: 'Trade imbalance', tag: 'Not covered here',
@@ -2807,11 +2816,31 @@ PAGES.about = (app, side) => {
   });
 };
 
+/* ---------- About the author ---------- */
+PAGES.author = (app, side) => {
+  side.innerHTML = sideLinks('Go to', ABOUT_GO, 'author') + sideSelect([['Go to', ABOUT_GO]], 'author');
+  app.innerHTML = `<article class="prose sec-page author">
+      <p class="kicker">About the author</p>
+      <div class="au-row">
+        <img class="au-photo" src="img/amit-kumar.jpg" width="320" height="320" alt="Amit Kumar" decoding="async">
+        <div class="au-text">
+          <h1>Amit Kumar</h1>
+          <p class="au-role">Policy researcher, Takshashila Institution</p>
+          <p>Amit Kumar is a policy researcher at the Takshashila Institution's Geostrategy Programme and a doctoral scholar at MAHE. With a broader focus on China, his research explores issues at the intersection of economy, technology and security.</p>
+          <p>He developed the Strategic and Critical Vulnerability framework on which this Observatory is built.</p>
+          <p class="au-go"><a class="btn primary" href="https://amitkumar-ak.com/" target="_blank" rel="noopener">Visit my website →</a></p>
+          <p class="cap">Questions or corrections about the Observatory? <a href="#methodology?s=contact">Get in touch</a>.</p>
+        </div>
+      </div>
+    </article>`;
+};
+
 /* ---------- Site search ---------- */
 // Sections a reader can jump to; Methodology headings and text are read from the page itself
 const SEARCH_PAGES = [
   ...CHAPTERS.map((ch, k) => ({ page: 'overview', hash: `#overview?ch=${k}`, t: k ? ch.t : "De-risking India's Trade with China", k: ch.k })),
   { page: 'about', hash: '#about', t: 'About this Observatory', k: 'about three concerns trade imbalance dumping vulnerabilities free-ride subsidise subsidies exports' },
+  { page: 'author', hash: '#author', t: 'About the author: Amit Kumar', k: 'author creator amit kumar takshashila geostrategy mahe bio photo' },
   { page: 'explorer', hash: '#explorer', t: 'Vulnerability Explorer', k: 'table explorer search filter sort commodities groups' },
   { page: 'explorer', hash: '#explorer?tab=all&view=chart', t: 'Chart of every item by scale and complexity', k: 'bubble chart scatter plot rif pci' },
 ];
@@ -2823,7 +2852,7 @@ function searchIndex() {
   SEARCH_IDX = { sections: SEARCH_PAGES.map(s => ({ ...s, k: s.k.toLowerCase() })).concat(meth) };
   return SEARCH_IDX;
 }
-const PAGE_NAME = { overview: 'At a Glance', explorer: 'Vulnerability Explorer', methodology: 'Methodology', about: 'About' };
+const PAGE_NAME = { overview: 'At a Glance', explorer: 'Vulnerability Explorer', methodology: 'Methodology', about: 'About', author: 'About the author' };
 function runSearch(raw) {
   const q = raw.trim().toLowerCase(), box = $('#sRes');
   sHits = []; sOn = -1;
