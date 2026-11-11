@@ -730,6 +730,78 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
   .sorter .g-f1, .sorter .g-s1 { margin-left: 34px; }
   .sorter .g-d2, .sorter .g-d3 { margin-top: 14px; }
 }
+/* About: the three concerns as tabs; vulnerabilities (this Observatory) opens first */
+.about .ab-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 22px 0 0; }
+.about .ab-tab { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center; text-align: left; font: inherit; color: var(--ink-50); background: var(--deep); border: var(--rule); border-top: 4px solid var(--ink-20); margin-left: -1px; padding: 10px 14px 9px; cursor: pointer; }
+.about .ab-tab:first-child { margin-left: 0; }
+.about .ab-tab:hover { color: var(--ink); background: var(--paper); }
+.about .ab-tab:focus-visible { outline: 2px solid var(--wine); outline-offset: -2px; }
+.about .ab-tn { grid-row: 1 / 3; font-size: 26px; font-weight: 600; line-height: 1; }
+.about .ab-tt { font-size: 15px; font-weight: 600; line-height: 1.2; }
+.about .ab-tg { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.about .ab-tab.here { color: var(--wine); }
+.about .ab-tab[aria-selected="true"] { color: var(--ink); background: var(--paper); border-top-color: var(--ink-50); border-bottom-color: var(--paper); position: relative; z-index: 1; }
+.about .ab-tab.here[aria-selected="true"] { color: var(--wine); background: var(--wine-soft); border-top-color: var(--wine); border-bottom-color: var(--wine-soft); }
+.about .ab-panel { border: var(--rule); margin-top: -1px; padding: 18px 20px 16px; background: var(--paper); }
+.about .ab-panel.here { background: var(--wine-soft); border-color: rgba(98,13,60,0.25); }
+.about .ab-note { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-50); margin: 0 0 12px; }
+.about .ab-lead { margin: 0 0 16px; background: var(--paper); }
+.about .ab-lead p { margin: 0; font-size: 15px; line-height: 1.5; }
+.about .ab-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 0 28px; }
+.about .ab-c p { margin: 0; font-size: 14px; line-height: 1.5; }
+.about .ab-w h3, .about .ab-c h3 { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--mono); color: var(--ink-50); margin: 0 0 4px; font-weight: 600; }
+.about .ab-w ul { margin: 0; padding-left: 18px; }
+.about .ab-w li { font-size: 14px; line-height: 1.5; margin: 0 0 4px; }
+.about .callout p { margin: 0; }
+.about-go { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 22px; }
+@media (max-width: 760px) {
+  .about .ab-cols { grid-template-columns: 1fr; gap: 14px 0; }
+  .about .ab-tab { grid-template-columns: 1fr; padding: 8px 8px 7px; row-gap: 1px; }
+  .about .ab-tn { grid-row: auto; font-size: 18px; }
+  .about .ab-tt { font-size: 13px; }
+  .about .ab-tg { font-size: 8.5px; letter-spacing: 0.04em; }
+  .about .ab-panel { padding: 14px 14px 12px; }
+}
+/* Story map: questions open to answers; a rail shows the stage reached */
+.prose .sm-rail { list-style: none; margin: 18px 0 8px; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: sticky; top: 0; z-index: 4; background: var(--paper); }
+.prose .sm-rail li { position: relative; padding: 10px 14px 9px 12px; border: var(--rule); border-top: 4px solid var(--ink-20); margin: 0 0 0 -1px; display: flex; flex-direction: column; gap: 1px; background: var(--paper); }
+.prose .sm-rail li:first-child { margin-left: 0; }
+.sm-rail li b { font-size: 13.5px; font-weight: 600; color: var(--ink-50); }
+.sm-rail li span { font-size: 11.5px; color: var(--ink-50); line-height: 1.3; }
+.sm-rail li:not(:last-child)::after { content: '→'; position: absolute; right: 7px; top: 50%; transform: translateY(-50%); color: var(--ink-50); font-size: 15px; }
+.sm-rail li.done { border-top-color: var(--wine); }
+.sm-rail li.done b { color: var(--ink); }
+.sm-rail li.on { background: var(--wine); border-color: var(--wine); }
+.sm-rail li.on b, .sm-rail li.on span, .sm-rail li.on::after { color: #fff; }
+.sm-tools { margin: 10px 0 4px; }
+.prose .sm-list { list-style: none; margin: 0; padding: 0; }
+.prose .sm-item { border: var(--rule); border-top: 0; margin: 0; background: var(--paper); scroll-margin-top: 96px; }
+.prose .sm-list .sm-item:first-child { border-top: var(--rule); }
+.sm-q { width: 100%; display: flex; align-items: center; gap: 14px; text-align: left; background: none; border: 0; padding: 14px 16px; cursor: pointer; font: inherit; color: var(--ink); }
+.sm-q:hover { background: var(--deep); }
+.sm-q:focus-visible { outline: 2px solid var(--wine); outline-offset: -2px; }
+.sm-n { flex: none; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; background: var(--deep); color: var(--wine); border: var(--rule); }
+.sm-t { flex: 1; font-size: 16px; font-weight: 600; line-height: 1.3; }
+.sm-c::before { content: '+'; font-size: 22px; line-height: 1; color: var(--wine); font-weight: 400; }
+.sm-item.open .sm-c::before { content: '–'; }
+.sm-item.open .sm-q { background: var(--deep); }
+.sm-item.open .sm-n { background: var(--wine); color: #fff; border-color: var(--wine); }
+.sm-a { padding: 4px 18px 18px 60px; }
+.sm-a p { font-size: 15px; line-height: 1.55; margin: 8px 0 0; max-width: 70ch; }
+.sm-a .sm-obs { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; background: var(--wine-soft); border-left: 4px solid var(--wine); padding: 8px 12px; font-size: 13.5px; }
+.sm-a .sm-obs span { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wine); }
+.sm-a .btn { margin-top: 14px; }
+@media (max-width: 640px) {
+  .prose .sm-rail { grid-template-columns: 1fr 1fr; position: static; }
+  .prose .sm-rail li { margin-left: 0; margin-top: -1px; }
+  .prose .sm-rail li:first-child { margin-top: 0; }
+  .prose .sm-rail li:not(:last-child)::after { display: none; }
+  .prose .sm-rail li span { display: none; }
+  .sm-a { padding: 2px 14px 16px 14px; }
+  .sm-q { padding: 12px 12px; gap: 10px; }
+  .sm-t { font-size: 15px; }
+  nav.main { gap: 18px; }
+}
 .vstrip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--ink-20); border: var(--rule); margin: 18px 0 22px; }
 .vstrip a { background: var(--paper); padding: 12px 14px 12px; border-top: 4px solid var(--vc); color: inherit; text-decoration: none; display: flex; flex-direction: column; }
 .vstrip a:hover { background: var(--deep); }
@@ -1061,6 +1133,7 @@ td.n .sub.ease .tier { margin-right: 6px; }
       <a class="nav-link" href="#overview" data-page="overview">At a Glance</a>
       <a class="nav-link" href="#explorer" data-page="explorer"><span class="nl-long">Vulnerability </span>Explorer</a>
       <a class="nav-link" href="#methodology" data-page="methodology">Methodology</a>
+      <a class="nav-link" href="#about" data-page="about">About</a>
       <button type="button" class="nav-search" id="searchBtn" aria-label="Search the Observatory" aria-expanded="false" aria-controls="search" title="Search (/)">
         <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4"/></svg>
       </button>
@@ -1088,7 +1161,7 @@ td.n .sub.ease .tier { margin-right: 6px; }
 </div>
 <aside id="drawer" aria-hidden="true" aria-label="Commodity detail" tabindex="-1"></aside>
 <div id="scrim"></div>
-<footer class="copyright-footer">© 2026 Amit Kumar · Takshashila Institution<span class="f-sep">·</span><a href="#methodology?s=contact">Suggest an update</a></footer>
+<footer class="copyright-footer">© 2026 Amit Kumar · Takshashila Institution<span class="f-sep">·</span><a href="#about">About</a><span class="f-sep">·</span><a href="#methodology?s=contact">Suggest an update</a></footer>
 
 <script>
 /*CORE-START*/
@@ -2272,13 +2345,99 @@ const GLOSSARY = [
 
 // The handbook: one section at a time, chosen from the sidebar; each section has its own link (#methodology?s=id)
 const swatch = c => `<span class="sw" style="background:${CAT[c].fill}${c === 'na' ? ';border:1px dashed rgba(23,20,19,0.5)' : ''}"></span>`;
+// The story map: the chapter's questions, in order, from a simple case of dependence to a critical vulnerability.
+// st is the stage on the rail: 0 dependence, 1 vulnerability, 2 strategic, 3 critical, 4 none
+const STORY_STAGES = [['Dependence', 'A two-way street'], ['Vulnerability', 'Dependence plus disruptive factors'], ['Strategic', 'Four tests'], ['Critical', 'Two severe cases']];
+const STORY = [
+  { st: 0, q: 'Is dependence necessarily bad?', a: [
+    "Dependence is the product of comparative advantage. It is also a two-way street. Consider a big grocery store in a small town. The people of the town rely on the store for some of the grocery items that no other stores in the town sell. While it is true that consumers of the town are more dependent on the single grocery store, the reverse is also true: the store depends on the demand from consumers for its sales.",
+    "Suppose it chooses to weaponize its dominant position and pushes the price up. That may force consumers to reduce their purchases, and create an opportunity for the nearby small store to fill in the newly-created demand."] },
+  { st: 0, q: 'How much dependence is worth investigating?', a: [
+    "Deciding on a threshold is tricky, as there are no established formulae. India's Competition Act, 2002 regards a market share of above 40 per cent as dominant. In our case, a threshold of 30 per cent with respect to China seems optimum for two reasons.",
+    "The cut-off roughly corresponds to China's global production capacity, by volume and by value. And sufficient diversification already exists for items with dependence less than 30 per cent."],
+    obs: ['Step 1, the dependence filter', '#methodology?s=dependence'] },
+  { st: 1, q: 'Is dependence the same as vulnerability?', a: [
+    "No. Vulnerability appears to be a consequence of dependence. It is a case of dependence susceptible to disruption due to the presence of High Probability Disruptive Factors: recurrent tariff or non-tariff barriers, supply shocks, natural calamities, and information asymmetry, among others.",
+    "For dependence to become a source of vulnerability, its severity has to be significant."] },
+  { st: 2, q: 'Does importing soft toys, videogames or firecrackers make India strategically vulnerable?', a: [
+    "To answer, ask what kind of strategic cost China can inflict by disrupting the exports of such items. The only cost is perhaps forcing Indians to celebrate Diwali with fewer firecrackers, or nudging toddlers and teenagers to explore the outside world a little more than before.",
+    "Does this offer China any strategic advantage vis-à-vis India? The answer is a resounding no."] },
+  { st: 2, q: 'What makes a vulnerability strategic?', a: [
+    "Two conditions. One, the driving factor must be strategically motivated: the intention must be to extract some strategic benefit. Two, it should succeed in inflicting strategic cost on the player deemed vulnerable or dependent.",
+    "This gives four tests: adversary, substitutability, incidence and cascading effect. A case must clear the adversary and substitutability tests and at least one of incidence or cascading."] },
+  { st: 2, q: 'The adversary test: who would want to inflict the cost?', a: [
+    "A strategic motivation to inflict a cost on India would only be harboured by an adversarial state. A friendly state could also resort to similar measures, but given the congruence of interests, one expects that the motivation will be narrower. The case of China fulfils this criterion.",
+    "In November 2024, a German tunnel boring machine maker confirmed that Chinese customs authorities were blocking its supplies meant for India. China had also restricted rare earths to Japan in 2010."],
+    obs: ['Passed by default, because the study is of imports from China', '#methodology?s=dependence'] },
+  { st: 2, q: 'The substitutability test: can India replace the supply?', a: [
+    "If imports from the adversary can be replaced within a short period, say six to nine months, the dependence is not much of a strategic vulnerability. If replacing them takes substantially longer, the medium to long term, it can be termed a strategic vulnerability.",
+    "But lack of substitutability isn't the defining test. Suppose India's dependence on firecrackers is 90 per cent and there is no alternative source, even in the long term. Does that enable China to impose a strategic cost? The answer is still no, because of the absence of any incidence effect on the general populace."],
+    obs: ["Step 3, China's share of global exports and export cover", '#methodology?s=suppliers'] },
+  { st: 2, q: 'The incidence test: would people feel it?', a: [
+    "For the adversary to gain a strategic advantage, the product needs two attributes: ubiquity and utility. It must be widely consumed, and it must have a high utility for consumers.",
+    "Soft toys, firecrackers and decoratives may exhibit ubiquity, but not high utility. Consumer electronics exhibit both."] },
+  { st: 2, q: 'The cascading test: what about goods people never see?', a: [
+    "The incidence test applies to finished products. But there are goods we consume indirectly. A firm in India may import key machinery from China to make products consumed at home and abroad. Intermediate goods, such as raw materials, parts and spares, and chemicals, go through stages of value-addition before reaching consumers.",
+    "The adversary can halt supplies of such goods, as China did with rare-earth minerals and magnets to Japan in 2010 and again in 2025. A disruption can trigger a spill-over effect within and across the industry, impacting producers, workers and finally consumers."],
+    obs: ['Step 2, where the Relative Impact Factor stands in for incidence and cascading', '#methodology?s=rif'] },
+  { st: 3, q: 'Are all strategic vulnerabilities equally severe?', a: [
+    "No. Some may be of a more severe or critical nature than others, and depending on the severity, a different approach might be needed. There are two such conditions."] },
+  { st: 3, q: 'Critical, first form: when the capability gap is huge', a: [
+    "This is where the capability gap between the adversary and the rest of the world is so huge that substitutability seems impossible. Take China's capability deficit vis-à-vis the West with respect to photolithography equipment. The vulnerability is so severe, owing to the capability gap, that it needs to be treated as a critical vulnerability."],
+    obs: ['Step 4, the Product Complexity Index; 1.75 or more is critical', '#methodology?s=pci'] },
+  { st: 3, q: 'Critical, second form: when strategic infrastructure is at stake', a: [
+    "The adversary can also impose cost directly on the government by taking down critical infrastructure, through cyberattacks, or through backdoors in imported hardware.",
+    "An import dependence on the adversary for electronic parts, components and machines used in aviation, power grids, railways, nuclear facilities, communications and advanced research facilities amounts to an extreme kind of strategic vulnerability. This is defined as a critical vulnerability."],
+    obs: ['Items in listed national-security sectors are critical outright', '#methodology?s=security'] },
+  { st: 4, q: 'How does the Observatory put all this to work?', a: [
+    "The tests are qualitative, so the Observatory uses measures that stand in for them: the 30% dependence filter, RIF for incidence and cascading, China's share of global exports and export cover for substitutability, and PCI for the capability gap. A human examination then looks at what the numbers cannot show."],
+    obs: ['Open the method', '#methodology?s=framework'] },
+  { st: 4, q: 'Does the dependence run only one way?', a: [
+    "If a significantly high RIF renders India vulnerable, a low to moderate product complexity renders China equally vulnerable. As almost all of China's exports to India are relatively easily substitutable, Beijing's leverage over New Delhi is rather limited. The nature of dependence equips India with leverage as well."] },
+];
+function storyHTML() {
+  const rail = STORY_STAGES.map(([n, d], k) => `<li data-stage="${k}"><b>${n}</b><span>${d}</span></li>`).join('');
+  const items = STORY.map((x, k) => `<li class="sm-item" id="sm${k + 1}" data-st="${x.st}">
+      <button type="button" class="sm-q" aria-expanded="false" aria-controls="sm${k + 1}a"><span class="sm-n">${k + 1}</span><span class="sm-t">${x.q}</span><span class="sm-c" aria-hidden="true"></span></button>
+      <div class="sm-a" id="sm${k + 1}a" hidden>${x.a.map(t => `<p>${t}</p>`).join('')}${x.obs ? `<p class="sm-obs"><span>In the Observatory</span><a href="${x.obs[1]}">${x.obs[0]} →</a></p>` : ''}${k < STORY.length - 1 ? '<button type="button" class="btn sm-next">Next question →</button>' : '<a class="btn primary" href="#methodology?s=framework">Open the method →</a>'}</div></li>`).join('');
+  return `<p class="lede">Follow the questions, in order, from a simple case of dependence to a critical vulnerability. Select a question to see the answer.</p>
+    <div class="sm" id="storyMap">
+      <ol class="sm-rail" aria-label="Where you are in the story">${rail}</ol>
+      <p class="sm-tools"><button type="button" class="btn" id="smAll">Show all answers</button></p>
+      <ol class="sm-list">${items}</ol>
+    </div>
+    <p class="cap">Drawn from Amit Kumar, “The Intractable Dilemma” (2026), and Manoj Kewalramani and Amit Kumar, “Self-Strengthening First” (2026). <a href="#methodology?s=sources">Sources</a></p>`;
+}
+function bindStory(app) {
+  const root = $('#storyMap', app);
+  if (!root) return;
+  const items = $$('.sm-item', root), rail = $$('.sm-rail li', root), all = $('#smAll', root);
+  const stage = () => {
+    // The rail shows the furthest stage reached by any open question
+    const open = items.filter(i => !i.querySelector('.sm-a').hidden).map(i => +i.dataset.st).filter(n => n < 4);
+    const at = open.length ? Math.max(...open) : -1;
+    rail.forEach((li, k) => { li.classList.toggle('on', k === at); li.classList.toggle('done', k < at); });
+    all.textContent = items.every(i => !i.querySelector('.sm-a').hidden) ? 'Hide all answers' : 'Show all answers';
+  };
+  const set = (item, on) => { item.querySelector('.sm-a').hidden = !on; item.querySelector('.sm-q').setAttribute('aria-expanded', String(on)); item.classList.toggle('open', on); };
+  items.forEach((item, k) => {
+    item.querySelector('.sm-q').addEventListener('click', () => { set(item, item.querySelector('.sm-a').hidden); stage(); });
+    const nx = item.querySelector('.sm-next');
+    if (nx) nx.addEventListener('click', () => { const n = items[k + 1]; set(n, true); stage(); n.scrollIntoView({ behavior: 'smooth', block: 'start' }); n.querySelector('.sm-q').focus({ preventScroll: true }); });
+  });
+  all.addEventListener('click', () => { const on = !items.every(i => !i.querySelector('.sm-a').hidden); items.forEach(i => set(i, on)); stage(); });
+  set(items[0], true);
+  stage();
+}
 const METH = [
+  { id: 'story', g: 'Start here', t: 'From dependence to critical vulnerability', s: 'Story map', h: () => storyHTML() },
   { id: 'about', g: 'The method', t: 'About this method', s: 'About this method', h: () => `
       <p class="lede">This Observatory draws on three works by Amit Kumar. The first, <a href="${IPPR_URL}" target="_blank" rel="noopener"><em>Defining Strategic and Critical Vulnerabilities in Asymmetrical Trade Interdependence</em></a> (Indian Public Policy Review, 2023), sets out the Strategic and Critical Vulnerability (SCV) framework. The second, <a href="${PAPER_URL}" target="_blank" rel="noopener"><em>De-risking India's Trade with China: Identifying Strategic and Critical Vulnerabilities</em></a> (Takshashila Discussion Document 2025-01), applies that framework to India's imports from China. The third, “The Intractable Dilemma: A Vision for De-risking Trade with China”, is a chapter in <em>Taming the Dragon</em> (Rupa Publications, 2026). It applies the RIF-PCI scale to India's three largest import categories from China and sets out options for de-risking them.</p>
       <div class="callout"><strong>About this methodology.</strong> The method on this page is an improved version of the one that appeared in the original work. It keeps the original framework and adjusts it so that it can be applied to every HS8 line India imports, across four financial years. It also adds further refinements that bring more nuance to the analysis. For this reason, figures and verdicts on this dashboard may differ from those in the original work.</div>
       <p>The method works in three layers. The SCV framework is the theory. A set of measures (dependence, the Relative Impact Factor, China's share of global exports and the Product Complexity Index) puts the framework to work on trade data. A final human examination covers what numbers cannot show.</p>` },
   { id: 'scv', g: 'The method', t: 'The SCV framework', s: 'The SCV framework', h: () => `
       <p>The Strategic and Critical Vulnerability (SCV) framework is the backdrop for everything else on this page. It sets out when a dependence on another country becomes a strategic vulnerability, and when that vulnerability is critical. The framework is theoretical. The rest of the method finds a way to put it to work on trade data.</p>
+      <p>The same framework, told as a series of questions with examples, is in the <a href="#methodology?s=story">story map</a>.</p>
       <div class="fig-row">
         <div>
           <p>Not every dependence is a vulnerability, and not every vulnerability is strategic. Dependence becomes a vulnerability when disruptive factors, such as trade barriers or supply shocks, make it unreliable. A vulnerability is strategic when an adversary can exploit it. A critical vulnerability is the most severe kind of strategic vulnerability. The diagram shows each category as a ring inside the one before it.</p>
@@ -2566,7 +2725,7 @@ const methLink = x => ({ id: x.id, label: x.s, href: `#methodology?s=${x.id}` })
 
 PAGES.methodology = (app, side) => {
   const i = METH.findIndex(x => x.id === S.mSec), sec = METH[i];
-  const groups = ['The method', 'Reference'].map(g => [g, METH.filter(x => x.g === g).map((x, k) => ({ ...methLink(x), n: g === 'The method' ? k + 1 : '' }))]);
+  const groups = ['Start here', 'The method', 'Reference'].map(g => [g, METH.filter(x => x.g === g).map((x, k) => ({ ...methLink(x), n: g === 'The method' ? k + 1 : '' }))]);
   side.innerHTML = groups.map(([g, items]) => sideLinks(g, items, sec.id)).join('') + sideLinks('Jump to', JUMPS) + sideSelect([...groups, ['Jump to', JUMPS]], sec.id) + sideMeta();
   const inGroup = METH.filter(x => x.g === sec.g);
   app.innerHTML = `<article class="prose sec-page">
@@ -2575,6 +2734,7 @@ PAGES.methodology = (app, side) => {
       ${sec.h()}
       ${pnHTML(i > 0 ? methLink(METH[i - 1]) : null, i < METH.length - 1 ? methLink(METH[i + 1]) : null)}
     </article>`;
+  if (sec.id === 'story') bindStory(app);
   const cf = $('#cf');
   if (cf) {
     const hs = new URLSearchParams(location.hash.split('?')[1] || '').get('hs8');
@@ -2595,10 +2755,63 @@ PAGES.methodology = (app, side) => {
   });
 };
 
+/* ---------- About: the three concerns in India-China trade, and which one this Observatory addresses ---------- */
+PAGES.about = (app, side) => {
+  const go = [{ id: 'about', label: 'About this Observatory', href: '#about' }, { id: 'story', label: 'Story map', href: '#methodology?s=story' }, { id: 'method', label: 'The method', href: '#methodology?s=about' }, { id: 'explorer', label: 'Vulnerability Explorer', href: '#explorer' }, { id: 'glance', label: 'At a Glance', href: '#overview' }];
+  side.innerHTML = sideLinks('Go to', go, 'about') + sideSelect([['Go to', go]], 'about');
+  // Vulnerabilities is the Observatory's own concern, so it opens first; the other two sit in the backdrop
+  const strands = [
+    { id: 'imbalance', n: 1, t: 'Trade imbalance', tag: 'Not covered here',
+      c: "Imbalanced trade and huge asymmetry have become characteristic of India-China goods trade. In FY 2025, India imported US$ 113 billion worth of goods from China, but exported goods worth only US$ 14 billion. This asymmetry isn't a function of India's ever-increasing imports from China, as much as it is a result of India's stagnant exports to China. Thus, the remedy lies in identifying the factors that have prevented India from scaling its exports to China.",
+      w: ["Regularise government-to-government, business-to-business and government-to-business dialogue, to understand the Chinese market and align expectations and quality standards.", "Study the complementarities between Indian exports and Chinese imports on a continuous basis, and boost services exports.", "Raise India's overall export capability."] },
+    { id: 'dumping', n: 2, t: 'Dumping', tag: 'Not covered here',
+      c: "China engages in suppressed interest rates, currency devaluation, extensive subsidies and tax rebates to keep its exports artificially competitive. As a result, concerns around unfair competition and de-industrialisation are legitimate. However, a blanket ban on Chinese imports is neither prudent nor effective. An optimal strategy should be to restore fair competition rather than eliminate trade.",
+      w: ["Use calibrated anti-dumping and countervailing duties.", "Keep them proportionate: a duty roughly equal to the value of unfair subsidies.", "Use them where India already has significant manufacturing strength."] },
+    { id: 'vulnerabilities', n: 3, t: 'Vulnerabilities', tag: 'This Observatory', here: true,
+      lead: "The objective of this Observatory is to address the third problem underlying the India-China trade. It does not address the problems arising out of trade imbalance or dumping. Instead, it maps India's dependence on China item by item and asks which dependences are vulnerabilities, which are strategic, and which are critical, so that de-risking can be selective.",
+      c: "Import dependence, which is a product of the logic of comparative advantage, is not inherently harmful. Dependence becomes a vulnerability only when it is severe and exposed to disruptive factors like supply shocks, trade barriers, or information asymmetries. Even then, not all vulnerabilities are strategic. De-risking should be selective and cost-conscious.",
+      w: ["Stockpiling with limited diversification for organic chemicals.", "Capturing low-end value-chain segments, such as parts and spares, in electronics.", "Deregulation, to make India a more attractive destination for the China plus one strategy.", "No state intervention for items that are not strategic."] },
+  ];
+  const want = new URLSearchParams(location.hash.split('?')[1] || '').get('c');
+  const first = strands.some(x => x.id === want) ? want : 'vulnerabilities';
+  const tabs = strands.map(x => `<button type="button" role="tab" class="ab-tab${x.here ? ' here' : ''}" id="abt-${x.id}" aria-controls="abp-${x.id}" aria-selected="${x.id === first}" tabindex="${x.id === first ? 0 : -1}" data-id="${x.id}"><span class="ab-tn">${x.n}</span><span class="ab-tt">${x.t}</span><span class="ab-tg">${x.tag}</span></button>`).join('');
+  const panels = strands.map(x => `<div role="tabpanel" class="ab-panel${x.here ? ' here' : ''}" id="abp-${x.id}" aria-labelledby="abt-${x.id}"${x.id === first ? '' : ' hidden'}>
+      ${x.lead ? `<div class="callout ab-lead"><p>${x.lead}</p></div>` : '<p class="ab-note">Not addressed by this Observatory</p>'}
+      <div class="ab-cols"><div class="ab-c"><h3>The concern</h3><p>${x.c}</p></div><div class="ab-w"><h3>What to do</h3><ul>${x.w.map(t => `<li>${t}</li>`).join('')}</ul></div></div>
+    </div>`).join('');
+  app.innerHTML = `<article class="prose sec-page about">
+      <p class="kicker">About</p>
+      <h1>About this Observatory</h1>
+      <p class="lede">India's concerns vis-à-vis China in bilateral trade are three-fold: trade imbalance, dumping and import dependence-induced strategic vulnerabilities. Each of these three issues is distinct in nature, thereby demanding a specific approach.</p>
+      <div class="ab-tabs" role="tablist" aria-label="The three concerns">${tabs}</div>
+      ${panels}
+      <h2>Why India can let China subsidise its development where it can</h2>
+      <div class="callout teal"><p>In sectors where domestic capability is non-existent, India should strategically “free-ride” on Chinese subsidies to support its own development, keeping developmental costs low in an increasingly inward-looking global economy. Using duties there punishes a category of manufacturers and traders who rely on cheap imports, including from China, to add value and gain competitiveness, and raises consumers' cost of living. By importing cheap intermediate goods, Indian manufacturers can lower their production costs. Given that India's monetary and financial constraints are far greater than China's, it can act prudently by leveraging Chinese policies to subsidise its own development. Pragmatism dictates that India leverage Chinese policies to subsidise its growth.</p></div>
+      <p class="about-go"><a class="btn primary" href="#methodology?s=story">Follow the story map →</a><a class="btn" href="#methodology?s=about">Read the method →</a><a class="btn" href="#explorer">Explore the items →</a></p>
+      <p class="cap">Sources: Amit Kumar, “The Intractable Dilemma” (2026); Manoj Kewalramani and Amit Kumar, “Self-Strengthening First: A Blueprint for Economic Engagement with China”, <em>National Security</em> 9, no. 2 (2026). <a href="#methodology?s=sources">Full list of sources</a></p>
+    </article>`;
+  const tabEls = $$('.ab-tab', app);
+  const pick = id => {
+    tabEls.forEach(t => { const on = t.dataset.id === id; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+    $$('.ab-panel', app).forEach(pn => { pn.hidden = pn.id !== 'abp-' + id; });
+  };
+  tabEls.forEach((t, k) => {
+    t.addEventListener('click', () => pick(t.dataset.id));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      const n = tabEls[(k + d + tabEls.length) % tabEls.length];
+      pick(n.dataset.id); n.focus();
+    });
+  });
+};
+
 /* ---------- Site search ---------- */
 // Sections a reader can jump to; Methodology headings and text are read from the page itself
 const SEARCH_PAGES = [
   ...CHAPTERS.map((ch, k) => ({ page: 'overview', hash: `#overview?ch=${k}`, t: k ? ch.t : "De-risking India's Trade with China", k: ch.k })),
+  { page: 'about', hash: '#about', t: 'About this Observatory', k: 'about three concerns trade imbalance dumping vulnerabilities free-ride subsidise subsidies exports' },
   { page: 'explorer', hash: '#explorer', t: 'Vulnerability Explorer', k: 'table explorer search filter sort commodities groups' },
   { page: 'explorer', hash: '#explorer?tab=all&view=chart', t: 'Chart of every item by scale and complexity', k: 'bubble chart scatter plot rif pci' },
 ];
@@ -2610,7 +2823,7 @@ function searchIndex() {
   SEARCH_IDX = { sections: SEARCH_PAGES.map(s => ({ ...s, k: s.k.toLowerCase() })).concat(meth) };
   return SEARCH_IDX;
 }
-const PAGE_NAME = { overview: 'At a Glance', explorer: 'Vulnerability Explorer', methodology: 'Methodology' };
+const PAGE_NAME = { overview: 'At a Glance', explorer: 'Vulnerability Explorer', methodology: 'Methodology', about: 'About' };
 function runSearch(raw) {
   const q = raw.trim().toLowerCase(), box = $('#sRes');
   sHits = []; sOn = -1;
