@@ -954,6 +954,8 @@ table.matrix th.corner .cx-s { bottom: 8px; left: 9px; text-align: left; }
   .mx-fit table.matrix th.corner .cx-d { top: 6px; right: 4px; }
   .mx-fit table.matrix th.corner .cx-s { bottom: 6px; left: 4px; }
 }
+/* Explorer table headings sit in the vertical middle of the heading row */
+#exTable table.data thead th { vertical-align: middle; }
 /* Explorer table: at 1240px and wider all eight columns have their own width; below that every row becomes a labelled card */
 @media (min-width: 1240px) {
   #exTable table.data { table-layout: fixed; width: 100%; }
