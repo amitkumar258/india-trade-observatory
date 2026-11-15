@@ -957,6 +957,20 @@ details.why > div { padding: 0 12px 2px; font-size: 13.5px; color: var(--ink-70)
   .sm-t { font-size: 15px; }
   nav.main { gap: 18px; }
 }
+.vgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 20px 0 8px; }
+.vgrp { border: var(--rule); border-top: 4px solid var(--vc); }
+.vgrp .vhead { display: flex; flex-direction: column; padding: 12px 14px 10px; color: inherit; text-decoration: none; border-bottom: var(--rule); }
+.vgrp .vhead:hover { background: var(--deep); }
+.vgrp .fv { font-size: 28px; font-weight: 600; line-height: 1.1; }
+.vgrp .fl { font-size: 14px; font-weight: 600; margin-top: 2px; }
+.vgrp .fs { font-size: 12.5px; color: var(--ink-70); margin-top: 2px; }
+.vrow { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto auto; gap: 4px 10px; align-items: baseline; padding: 8px 14px; color: inherit; text-decoration: none; border-bottom: 1px solid var(--ink-10); font-size: 13.5px; }
+.vrow:last-child { border-bottom: 0; }
+.vrow:hover { background: var(--deep); }
+.vrow i { width: 11px; height: 11px; display: block; align-self: center; }
+.vrow b { font-size: 16px; font-weight: 600; text-align: right; }
+.vrow small { font-size: 12px; color: var(--ink-70); min-width: 76px; text-align: right; }
+@media (max-width: 760px) { .vgrid { grid-template-columns: 1fr; } }
 .vstrip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--ink-20); border: var(--rule); margin: 18px 0 22px; }
 .vstrip a { background: var(--paper); padding: 12px 14px 12px; border-top: 4px solid var(--vc); color: inherit; text-decoration: none; display: flex; flex-direction: column; }
 .vstrip a:hover { background: var(--deep); }
@@ -1548,7 +1562,7 @@ function init(d) {
   for (const y of YEARS) STATS[y] = stats(y);
   // Year buttons live in the sidebar, which is redrawn on every page
   document.addEventListener('click', e => { const b = e.target.closest('.seg.years button[data-year]'); if (b) setYear(b.dataset.year); });
-  // A link to the page already open still takes the reader to its target (for example, Jump to › Bubble chart twice)
+  // A link to the page already open still takes the reader to its target (for example, the same chapter link twice)
   document.addEventListener('click', e => { const a = e.target.closest('#side a[href^="#"]'); if (a && a.getAttribute('href') === location.hash) { e.preventDefault(); route(); } });
   window.addEventListener('hashchange', route);
   bindBarTips();
@@ -1617,7 +1631,7 @@ function route() {
   closeDetail();
   render();
   window.scrollTo(0, 0);
-  // #overview?ch=5&at=matrix|chart lands on the matrix or the bubble chart inside the verdict chapter
+  // #overview?ch=4&at=submatrix lands on the substitutability boxes; older links with at= are ignored
   const at = S.page === 'overview' && document.getElementById(({ submatrix: 'subSec', matrix: 'matrixSec', chart: 'verdictChart' })[p.get('at')]);
   // Scroll again once web fonts load, since the text above reflows when they arrive
   if (at) { const go = () => at.scrollIntoView({ block: 'start' }); requestAnimationFrame(go); document.fonts?.ready.then(go); }
@@ -1904,8 +1918,6 @@ function sideLinks(label, items, cur) {
 function sideSelect(groups, cur) {
   return `<label class="side-select"><span>On this page</span><select onchange="location.hash = this.value">${groups.map(([l, items]) => `<optgroup label="${esc(l)}">${items.map(x => `<option value="${x.href}"${x.id === cur ? ' selected' : ''}>${x.n ? `${x.n}. ` : ''}${esc(x.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
 }
-// The matrix and the bubble chart, one click from every sidebar
-const JUMPS = [{ id: 'j-sub', label: 'Substitutability outcomes', href: '#overview?ch=4&at=submatrix' }, { id: 'j-matrix', label: 'Vulnerability matrix', href: '#overview?ch=6&at=matrix' }, { id: 'j-chart', label: 'Bubble chart', href: '#overview?ch=6&at=chart' }, { id: 'j-watch', label: 'Vulnerabilities', href: '#overview?ch=7' }, { id: 'j-trends', label: 'Four-year trends', href: '#overview?ch=8' }];
 function pnHTML(prev, next) {
   return `<nav class="pn" aria-label="Previous and next">${prev ? `<a class="btn" href="${prev.href}">← ${esc(prev.label)}</a>` : '<span></span>'}${next ? `<a class="btn primary" href="${next.href}">${esc(next.label)} →</a>` : ''}</nav>`;
 }
@@ -1919,7 +1931,7 @@ const CHAPTERS = [
   { t: 'How big a disruption', k: 'scale of disruption rif immediate shock severe major substantial 0.01 watchlist' },
   { t: 'Could India buy elsewhere', k: 'substitutability alternatives alternative suppliers china share of global exports non-china exports export cover other exporters baci set aside where else could india buy production share' },
   { t: 'How hard to make', k: 'capability complexity pci production share exporters capability gap critical strategic low complexity' },
-  { t: 'The verdict', k: 'vulnerability matrix verdict critical strategic security sector low complexity not assessed' },
+  { t: 'The verdict', k: 'verdict critical strategic capability gap security sector exporters complexity production dominance' },
   { t: 'The watchlist', k: 'watchlist watch list small scale hard to replace large scale easy to replace alternatives exist acute dependence case by case' },
   { t: 'Four-year trends', k: 'trends four years 2022 2026 what changed growth imports items dependence grades vulnerability grown' },
   { t: 'Which items moved', k: 'items moved matrix change persistent newly vulnerable no longer vulnerable largest rise in dependence year on year' },
@@ -2081,21 +2093,28 @@ const CH_RENDER = [
       <p>For the ${int(g.subs)} items with limited alternatives, the second part of the substitutability test asks whether the item is hard to make: a ${term('pci', 'PCI')} of 1 or more. Items where China makes 50% or more of world output pass whatever their PCI. ${int(s.n.opp)} items are easy to make and are set aside as low-complexity dependence, and ${int(s.n.na)} cannot be assessed. The ${int(g.make)} that are hard to make face Step 4: an item is critical if its PCI is 1.75 or more, if five or fewer countries export it competitively, or if it is in a national-security sector. The rest are strategic.</p>
       ${figs([[int(s.crit), 'potential critical vulnerabilities'], [int(s.strat), 'potential strategic vulnerabilities'],
         [int(s.n.opp), 'low-complexity dependence'], [int(s.n.na), 'items not assessed', 'muted']])}
-      <p class="disclaim">How long a disruption would last depends on both substitutability and capability. That measure is being revised, so this page shows capability alone.</p>
-      <p class="ch-links"><a href="#methodology?s=pci">Read the method</a></p>
+            <p class="ch-links"><a href="#methodology?s=pci">Read the method</a></p>
       </div><div class="ch-vis">${basisBox('Classification by capability', 'Capability', 'by capability result', durParts(g2), g2)}</div></div>`;
   },
-  // 6. The verdict: the matrix (scale of disruption by complexity)
+  // 6. The verdict: what makes items critical or strategic
   (y, s) => {
-    const strip = [['critical', 'Potential critical vulnerabilities', s.crit, s.critV, CAT.crit.fill], ['strat', 'Potential strategic vulnerabilities', s.strat, s.stratV, CAT.high.fill],
-      ['opp', 'Low-complexity dependence', s.n.opp, s.v.opp, CAT.opp.fill], ['na', 'Not assessed', s.n.na, s.v.na, 'var(--ink-20)']];
-    return `${kick('The verdict · Scale of disruption × duration of disruption')}
-      <h1>Where is India strategically vulnerable?</h1>
-      <p class="lede">Each item that clears the first three steps is placed by its ${term('shock', 'scale of disruption')} (rows) and its ${term('pci', 'complexity')} (columns). Where complexity is Mild to High, India's dependence on China is a ${term('strategic', 'strategic vulnerability')}. Where it is Very High or Extremely High, the vulnerability is ${term('critical', 'critical')}. Items in national-security sectors are critical outright and have their own column. Select a cell to list its items.</p>
-      <p class="pv-note">This matrix places items by PCI, so the ${int(s.n.cprod)} items strategic through production dominance and the ${int(s.n.cubq)} critical through few exporters have no column here. A matrix of scale by duration is being developed to replace it.</p>
-      <div class="vstrip">${strip.map(([tab, l, n, v, f]) => `<a href="#explorer?tab=${tab}" style="--vc:${f}"><span class="fv">${int(n)}</span><span class="fl">${l}</span><span class="fs">${usd(v)} from China</span></a>`).join('')}</div>
-      ${matrixHTML()}
-      ${verdictChartHTML(y)}`;
+    const n = c => s.n[c] || 0, v = c => s.v[c] || 0;
+    const row = (tab, band, fill, label, k) => `<a class="vrow" href="#explorer?tab=${tab}&band=${band}"><i style="background:${fill}"></i><span>${label}</span><b>${int(n(k))}</b><small>${n(k) ? usd(v(k)) : ''}</small></a>`;
+    const crit = [['crit', 'Extremely High complexity: PCI 2 or more'], ['vh', 'Very High complexity: PCI 1.75 to 2'], ['cubq', 'Five or fewer competitive exporters'], ['nsc', 'National-security sector']];
+    const strat = [['low', 'Mild complexity: PCI 1 to 1.25'], ['mod', 'Moderate complexity: PCI 1.25 to 1.5'], ['high', 'High complexity: PCI 1.5 to 1.75'], ['cprod', 'China makes 50% or more of world output (PCI below 1)']];
+    return `${kick('The verdict · Step 4')}
+      <h1>Where is India strategically or critically vulnerable?</h1>
+      <p class="lede">The items that are hard to replace go to Step 4. Those where China holds a ${term('capgap', 'capability gap')}, or that sit in a national-security sector, are ${term('critical', 'critical vulnerabilities')}. The rest are ${term('strategic', 'strategic vulnerabilities')}. All of them stay potential until a human examination confirms each one.</p>
+      <div class="vgrid">
+        <div class="vgrp" style="--vc:${CAT.crit.fill}"><a class="vhead" href="#explorer?tab=critical"><span class="fv">${int(s.crit)}</span><span class="fl">Potential critical vulnerabilities</span><span class="fs">${usd(s.critV)} from China</span></a>
+          ${crit.map(([k, l]) => row('critical', k, CAT[k].fill, l, k)).join('')}</div>
+        <div class="vgrp" style="--vc:${CAT.high.fill}"><a class="vhead" href="#explorer?tab=strat"><span class="fv">${int(s.strat)}</span><span class="fl">Potential strategic vulnerabilities</span><span class="fs">${usd(s.stratV)} from China</span></a>
+          ${strat.map(([k, l]) => row('strat', k, CAT[k].fill, l, k)).join('')}</div>
+      </div>
+      <p class="cap">An item that passes more than one critical test is counted once, in the order shown. Select a group to see its items.</p>
+      <h2>See them laid out</h2>
+      <p>The <a href="#builder?p=p2">Matrix Builder</a> places these items, and every other dependent item, on any two measures, such as the scale of disruption against complexity or against the number of competitive exporters. <a href="#methodology?s=gates">Every gate at a glance</a> shows how each item got here.</p>
+      <p class="ch-links"><a href="#builder?p=p2">Scale × complexity in the Matrix Builder →</a><a href="#builder?p=p4">Scale × scarce capability →</a><a href="#methodology?s=gates">Every gate at a glance →</a></p>`;
   },
   // 8 and 9. Four-year trends (the overall picture) and which items moved (the item-level detail)
   // 7. Watchlist: small shock, longer disruption; large shock, shorter disruption
@@ -2198,14 +2217,14 @@ function trendsHTML(y, py, part) {
       </div>` : `<p class="vis-s">${FY[y]} is the earliest year in the Observatory. Choose a later year in the sidebar to compare it with the year before.</p>`}</section>`;
   }
 }
-const CH_BIND = { 3: bindBasis, 4: app => bindSubs(app), 5: bindBasis, 6: app => { bindMatrix(app); drawScatter(ITEMS.filter(i => !['below', 'alt'].includes(R(i).cat))); },
+const CH_BIND = { 3: bindBasis, 4: app => bindSubs(app), 5: bindBasis, 
   7: bindMini, 9: bindMini };
 function bindMini(app) { $$('ol.mini', app).forEach(ol => ol.addEventListener('click', e => { const li = e.target.closest('li[data-hs8]'); if (li) openDetail(li.dataset.hs8); })); }
 
 PAGES.overview = (app, side) => {
   const y = S.year, s = STATS[y], py = other(y), p = py ? STATS[py] : null, n = S.ch;
   const items = CHAPTERS.map((ch, k) => chLink(k));
-  side.innerHTML = yearSeg() + sideLinks('The story, in nine steps', items, n) + sideLinks('Jump to', JUMPS) + sideSelect([['The story', items], ['Jump to', JUMPS]], n) + sideMeta();
+  side.innerHTML = yearSeg() + sideLinks('The story, in nine steps', items, n) + sideSelect([['The story', items]], n) + sideMeta();
   app.innerHTML = `<div class="chapter ch-${n}">${CH_RENDER[n](y, s, py, p)}${n ? pnHTML(chLink(n - 1), n < CHAPTERS.length - 1 ? chLink(n + 1) : null) : ''}</div>`;
   CH_BIND[n]?.(app);
 };
@@ -2329,7 +2348,7 @@ function renderCellList(cells) {
   const size = 25, page = S.mPage;
   const title = cellName(rc, col);
   el.innerHTML = `<h3 class="bd-h">${esc(title)}</h3>
-    <p class="sec-note">These ${int(L.length)} ${L.length === 1 ? 'item accounts' : 'items account'} for ${usd(L.reduce((a, i) => a + R(i).c, 0))} of imports from China in ${FY[S.year]}. They are ranked by RIF, highest first. Disruption horizons are indicative and based on PCI.</p>
+    <p class="sec-note">These ${int(L.length)} ${L.length === 1 ? 'item accounts' : 'items account'} for ${usd(L.reduce((a, i) => a + R(i).c, 0))} of imports from China in ${FY[S.year]}. They are ranked by RIF, highest first.</p>
     <div id="cellTable">${tableHTML(L.slice(page * size, (page + 1) * size), TBL_KEYS(), { verdict: false })}</div>
     ${pagerHTML(L.length, page, size, 'cell')}`;
   bindRows($('#cellTable'));
@@ -2553,7 +2572,6 @@ PAGES.explorer = (app, side) => {
   const f = S.ex;
   side.innerHTML = `${yearSeg()}
     <p class="side-lab">Show</p><nav class="side-nav keep" id="exTabs" aria-label="Groups">${exTabsHTML()}</nav>
-    ${sideLinks('Jump to', JUMPS)}
     ${sideMeta()}`;
   app.innerHTML = `
     <div class="ex-head"><h1>Vulnerability Explorer</h1>
@@ -2654,9 +2672,8 @@ const GLOSSARY = [
   ['Dependence', 'Kumar 2023', 'A situation where one party relies on another to carry out business operations, broadly sales and purchases. Dependence can be buyer-based (downstream) or seller-based (upstream). Its degree or severity can create conditions of vulnerability. In the Observatory, the Dependence grade holds items India buys 30% or more from China that are not graded higher.'],
   ['Dependence (D), percentage', 'Kumar 2025; Observatory', 'Imports from China as a share of India’s total imports of the same item. Graded Moderate (30 to below 50%), High (50 to below 70%) and Acute (70% and above).'],
   ['Dependence filter', 'Kumar 2025', "The first quantitative step. Items where China supplies less than 30% of India's imports are set aside. China makes about 30% of the world's manufactured goods, so a share above 30% means India leans on China more than China's weight in world production explains. Below 30%, India already buys most of the item elsewhere."],
-  ['Disruption horizons', 'Kumar 2025; Kumar 2026', 'Short-term, short to medium-term, medium-term, medium to long-term and long-term rank how long a disruption might last, from shortest to longest. They are not periods of time. When drawn from PCI, they are indicative rankings, not forecasts.'],
   ['India\'s imports from China as % of non-China exports', 'Observatory', "What India buys of a product from China, as a share of what every other country exports of it: (India's imports from China ÷ exports by every country except China) × 100. Low means other countries already export far more than India buys from China, so a small rise in their exports would replace China. High means they could not. Above 100%, India buys more from China than all other countries export. Where China supplies under 30% of world exports, an item is set aside at 5% or less, about what one good year of export growth adds. These are actual exports, not spare capacity."],
-  ['Duration of disruption', 'Kumar 2025; Kumar 2026; Observatory', 'How long a disruption could last before India finds other supply. Under revision: duration will combine substitutability and capability. Until then it is indicated by the Product Complexity Index. Short-term is PCI 1 to below 1.25, short to medium-term 1.25 to below 1.5, medium-term 1.5 to below 1.75, medium to long-term 1.75 to below 2, and long-term PCI 2 and above. Below PCI 1, many countries make the product, so the disruption would be the shortest, though switching suppliers still takes some time. These horizons are indicative rankings: PCI ranks how hard a product is to replace; it does not forecast recovery time.'],
+  ['Duration of disruption', 'Kumar 2025; Observatory', 'How long a disruption could last before India finds other supply. The Observatory reads it from the substitutability test: an item that is hard to replace and hard to make would take longer to restore; one that other countries could supply, or that is easy to make, sooner. It is a ranking, not a forecast of time.'],
   ['Geoeconomics', 'Kumar 2023', 'The geostrategic use of economic power: using economic strength to pursue geostrategic interests. Geoeconomic interests are connected with resource management and the inclusion of resources into national economies.'],
   ['Geopolitics', 'Kumar 2023', 'The use of political tools to further geostrategic or national power or interests. Geopolitical interests are connected with the direct or indirect control of territories that contain resources.'],
   ['Geostrategic', 'Kumar 2023', 'The strategic approach specific to international relations: the interplay of geography (loosely, nations or states) and strategy. Geopolitics and geoeconomics are its two constituents.'],
@@ -2964,14 +2981,12 @@ const METH = [
       <h2>Competitive exporters</h2>
       <p>A country counts as a competitive exporter of a product when the product's share of its exports is at least the product's share of world trade: a revealed comparative advantage of 1 or more. Only countries exporting US$1 bn or more a year are counted, so that very small economies do not distort the count. The figures are an average for 2022 to 2024, from BACI.</p>
       <p>Few competitive exporters means the capability is scarce. The count includes China and does not say who leads, so items that pass only on this measure are checked in the human examination. Consumer goods are excepted, because few exporters there usually reflects specialisation, not scarce know-how.</p>
-      <div class="callout"><strong>Duration of disruption is being revised.</strong> Until now, the duration of a disruption was read from PCI alone. With two capability measures, and substitutability alongside them, duration will combine both. The PCI bands above describe complexity, not a forecast of how long a disruption would last.</div>` },
+      <div class="callout"><strong>Complexity and duration.</strong> The PCI bands above describe how hard a product is to make. They are not a forecast of how long a disruption would last. The method reads duration from the substitutability test: an item that is hard to replace and hard to make would take longer to restore.</div>` },
   { id: 'matrix', g: 'The method', t: 'Putting it together: sorting and verdicts', s: 'Sorting and verdicts', h: () => {
-    const t4cols = MATRIX_COLS.filter(c => c.id !== 'na');
-    const t4 = RIF_ROWS.map(rw => `<tr><th class="rh" style="background:${rw.fill}">${rw.name}<span class="mr">${rw.range}</span></th>${
-      t4cols.map(c => `<td class="m-${c.id}"><span class="cn-l">${cellName(rw.id, c.id)}</span><span class="cn-s">${c.dur}</span></td>`).join('')}</tr>`).join('');
+    const st = STATS[S.year], n = c => st.n[c] || 0;
     return `
-      <p>Two views show how the items are graded: the substitutability sorting and the verdict matrix.</p>
-      <h2>The substitutability sorting: strategic</h2>
+      <p>Two views show how the items are graded: the substitutability sorting and the verdict.</p>
+      <h2>The substitutability sorting</h2>
       <p>The substitutability page sorts each item that clears the dependence filter and the RIF threshold into seven boxes: first by China's production share where it is 50% or more, then by China's share of world exports and, for items under 30%, by India's imports from China as a share of non-China exports. Scale of disruption is not used: RIF has already been applied and plays no part in this test.</p>
       <div class="scroll-x keytable"><table class="data"><thead><tr><th>Box</th><th>China's share of world exports</th><th>What happens</th></tr></thead><tbody>
         <tr><td><span class="sw" style="background:var(--c-alt)"></span>Set aside</td><td class="mono">Under 30%, and India's imports from China 5% or less of non-China exports</td><td>Alternatives exist. The item is set aside; with a Severe or Major scale it is graded a vulnerability.</td></tr>
@@ -2982,23 +2997,13 @@ const METH = [
         <tr><td><span class="sw" style="background:#3d0826"></span>Production dominance</td><td class="mono">China makes 50% or more of world output, whatever its export share</td><td>Hard to replace on that ground alone. The item goes forward.</td></tr>
         <tr><td><span class="sw" style="background:#fff;border:1px dashed rgba(23,20,19,0.5)"></span>No supplier data</td><td class="mono">Not assessed</td><td>The item is not set aside, so that it can be reviewed.</td></tr>
       </tbody></table></div>
-      <h2>The verdict matrix: critical</h2>
-      <p>The verdict matrix places each item that clears scale and substitutability by its scale of disruption (rows) and its complexity (columns). It is being redesigned. Items that are critical through few competitive exporters, and items that are strategic through China's production share, have no PCI column of their own, so they are counted in the verdicts but not placed in this matrix. A matrix of scale by duration will replace it.</p>
-      <ul>
-        <li>Items that are easy to make (a PCI below 1, and China under 50% of world output) are set aside at the substitutability test as low-complexity dependence. They have their own column.</li>
-        <li>Items that pass the capability gap test are critical: a PCI of 1.75 or more, or five or fewer competitive exporters.</li>
-        <li>Items in national-security sectors that clear every earlier gate are critical. They have their own column.</li>
-        <li>All other items that clear the gates are strategic: a PCI of 1 to below 1.75, or a lower PCI with China making 50% or more of world output.</li>
-        <li>Items with no PCI score are not assessed until a score is found.</li>
-      </ul>
-      <div class="mx-fit keytable">
-        <table class="matrix static">
-          <thead><tr><th class="corner" aria-label="Rows: scale of disruption (RIF). Columns: duration of disruption (PCI)."><span class="cx cx-d">Duration<small>PCI →</small></span><span class="cx cx-s">Scale<small>RIF ↓</small></span></th>${t4cols.map(c => `<th class="m-${c.id}"><span class="mn">${c.name}</span><span class="mr">${c.range}</span></th>`).join('')}</tr></thead>
-          <tbody>${t4}</tbody>
-          <tfoot><tr><td></td><td class="span one">Low-complexity dependence</td><td class="span" colspan="3">Strategic vulnerability →</td><td class="span" colspan="3">Critical vulnerability →</td></tr></tfoot>
-        </table>
-      </div>
-      <p class="cap">Based on Kumar (2025), Table 4, with a column added for national-security sectors. Disruption horizons in the cells are indicative and derived from PCI.</p>`; } },
+      <h2>The verdict</h2>
+      <p>Only the items carried forward after the substitutability test receive a verdict. These are items with 30% or more dependence on China and an RIF of 0.01 or more that are hard to replace: alternatives are not enough and the item is hard to make, or China makes 50% or more of world output. Step 4 then sorts each one as critical or strategic. The counts are for ${FY[S.year]}.</p>
+      <div class="scroll-x keytable"><table class="data defs"><thead><tr><th>Verdict</th><th>Rule, for items carried forward</th><th class="n">Items</th></tr></thead><tbody>
+        <tr><td>${swatch('crit')}<strong>Critical vulnerability</strong></td><td>Passes the capability gap test (a PCI of 1.75 or more, or five or fewer competitive exporters, not applied to consumer goods) or the national security test (a listed HS4 heading)</td><td class="n">${int(st.crit)}</td></tr>
+        <tr><td>${swatch('high')}<strong>Strategic vulnerability</strong></td><td>Every other item carried forward: a PCI of 1 to below 1.75, or a lower PCI with China making 50% or more of world output</td><td class="n">${int(st.strat)}</td></tr>
+      </tbody></table></div>
+      <p>Items set aside earlier receive no verdict. Those below 30% dependence are in Others. Those with an RIF below 0.01, or set aside at the substitutability test, are graded <a href="#methodology?s=watch">vulnerabilities or dependence</a>. Of the items with a meaningful shock, ${int(n('alt'))} were set aside because alternatives exist and ${int(n('opp'))} because they are easy to make; ${int(n('na'))} have no PCI score and are not assessed. <a href="#methodology?s=gates">Every gate at a glance</a> shows the whole flow.</p>`; } },
   { id: 'verdicts', g: 'The method', t: 'Strategic and critical vulnerability', s: 'Strategic and critical', h: () => `
       <p>Each verdict has two definitions. The SCV framework gives a qualitative definition. The measures give a quantitative one. This dashboard computes the quantitative definition for every item. The shortlisted items are then examined against the qualitative definition.</p>
       <div class="scroll-x keytable"><table class="data defs"><thead><tr><th></th><th>Qualitative: SCV framework</th><th>Quantitative: the Observatory's measures</th></tr></thead><tbody>
@@ -3228,8 +3233,8 @@ const MB_SETS = [
 const MB_PRESETS = [
   { id: 'p1', x: 'rif', y: 'cv', set: 'dep', t: 'Scale × could others cover India?',
     why: "The two things that make a cut-off hurt: how large the shock would be, and whether the rest of the world exports enough to cover what India buys from China. Items to the right and higher up are large shocks that others could not cover quickly." },
-  { id: 'p2', x: 'rif', y: 'pci', set: 'dep', t: 'Scale × complexity: the first cut',
-    why: "The RIF-PCI matrix of Kumar (2025), the method's first cut: the size of the shock against how hard the product is to make. Higher up and to the right are large shocks in products few countries can make." },
+  { id: 'p2', x: 'rif', y: 'pci', set: 'dep', t: 'Scale × complexity',
+    why: "The size of the shock against how hard the product is to make. Higher up and to the right are large shocks in products few countries can make; a PCI of 1.75 or more passes the capability gap test." },
   { id: 'p3', x: 'rif', y: 'sw', set: 'dep', t: "Scale × China's grip on world exports",
     why: "The shock against China's share of world exports. Above 30%, China is a major supplier to the whole world, so alternatives are thin even before India's own purchases are counted." },
   { id: 'p4', x: 'rif', y: 'ubq', set: 'dep', t: 'Scale × scarce capability',
@@ -3399,7 +3404,7 @@ PAGES.builder = (app, side) => {
 PAGES.methodology = (app, side) => {
   const i = METH.findIndex(x => x.id === S.mSec), sec = METH[i];
   const groups = ['Start here', 'The method', 'Reference'].map(g => [g, METH.filter(x => x.g === g).map((x, k) => ({ ...methLink(x), n: g === 'The method' ? k + 1 : '' }))]);
-  side.innerHTML = groups.map(([g, items]) => sideLinks(g, items, sec.id)).join('') + sideLinks('Jump to', JUMPS) + sideSelect([...groups, ['Jump to', JUMPS]], sec.id) + sideMeta();
+  side.innerHTML = groups.map(([g, items]) => sideLinks(g, items, sec.id)).join('') + sideSelect(groups, sec.id) + sideMeta();
   const inGroup = METH.filter(x => x.g === sec.g);
   app.innerHTML = `<article class="prose sec-page">
       <p class="kicker">${sec.g}${sec.g === 'The method' ? ` · ${inGroup.indexOf(sec) + 1} of ${inGroup.length}` : ''}</p>
@@ -3637,7 +3642,6 @@ function openDetail(hs8) {
     ['RIF', r => rifFmt(r.rif)],
     ['RIF class', r => RIFNAME[r.rc]],
     ['Verdict', r => badge(gkey(r))],
-    ['Matrix cell', r => esc(matrixText(r) || r.reason || 'n/a')],
   ];
   const dr = $('#drawer');
   dr.innerHTML = `
