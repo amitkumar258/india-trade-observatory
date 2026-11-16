@@ -518,6 +518,8 @@ table.matrix tfoot td.span { border-top: 3px solid var(--ink); border-left: 6px 
 .prose li { margin: 6px 0; }
 .prose h2 { font-size: 19px; color: var(--wine); margin-top: 36px; }
 .keytable { margin-top: 12px; }
+table.data.cvt { table-layout: fixed; }
+table.data.cvt th { white-space: normal; vertical-align: bottom; }
 .prose h3 { font-size: 16px; font-weight: 600; margin: 24px 0 4px; }
 .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--ink-20); border: var(--rule); margin: 16px 0; }
 .flow > div { background: var(--deep); padding: 14px 16px; border-top: 4px solid var(--wine); }
@@ -1414,7 +1416,7 @@ function pciBand(p) {
 const altExists = (sw, cv) => sw != null && sw <= TH.S_MIN && !(cv != null && cv < TH.CV_MIN);
 // Method (Nov 2026): dependence, scale, substitutability, then capability gap or national security
 const TH3 = { PROD_MAKE: 50, UBQ: 5, PCI_CRIT: 1.75 };
-const CHAN_L = { I: 'Cascading', K: 'Cascading', C: 'Incidence', D: 'Both' };
+const CHAN_L = { I: 'Cascading', K: 'Cascading', C: 'Incidence', D: 'Not specified' };
 const ROUTE_L = { pci: 'PCI', prod: 'Production', ubq: 'Few exporters', ns: 'Security sector' };
 function capRoutes(pci, sp) {
   const r = [];
@@ -1423,6 +1425,15 @@ function capRoutes(pci, sp) {
   if (sp.ubq != null && sp.ubq <= TH3.UBQ && sp.eu !== 'C') r.push('ubq');
   if (sp.ns) r.push('ns');
   return r;
+}
+// Re-grade every item at another line for India's imports from China as % of non-China exports (Methodology table)
+function cvLineStats(y) {
+  const save = TH.CV_MIN, byk = new Map(DATA.rows.map(r => [r[0], r])), out = {};
+  for (const l of [5, 10, 20]) { TH.CV_MIN = 100 / l; let fwd = 0, sc = 0;
+    for (const i of ITEMS) { const k = classify(byk.get(i.hs8), y, { sw: i.sw, cv: i.cv, prod: i.prod, ubq: i.ubq, eu: i.eu, ns: i.ns, pciE: i.pciEst ? i.pci : null });
+      if (k.d >= TH.D_MIN && k.rif >= TH.RIF_MIN && !k.alt) fwd++; if (CRIT.includes(k.cat) || STRAT.includes(k.cat)) sc++; }
+    out[l] = { fwd, sc }; }
+  TH.CV_MIN = save; return out;
 }
 function classify(row, y, sp = {}) {
   const [ti, ci] = YCOL[y];
@@ -2887,7 +2898,14 @@ const METH = [
   { id: 'about', g: 'The method', t: 'About this method', s: 'About this method', h: () => `
       <p class="lede">This Observatory draws on three works by Amit Kumar. The first, <a href="${IPPR_URL}" target="_blank" rel="noopener"><em>Defining Strategic and Critical Vulnerabilities in Asymmetrical Trade Interdependence</em></a> (Indian Public Policy Review, 2023), sets out the Strategic and Critical Vulnerability (SCV) framework. The second, <a href="${PAPER_URL}" target="_blank" rel="noopener"><em>De-risking India's Trade with China: Identifying Strategic and Critical Vulnerabilities</em></a> (Takshashila Discussion Document 2025-01), applies that framework to India's imports from China. The third, “The Intractable Dilemma: A Vision for De-risking Trade with China”, is a chapter in <em>Taming the Dragon</em> (Rupa Publications, 2026). It applies the RIF-PCI scale to India's three largest import categories from China and sets out options for de-risking them.</p>
       <div class="callout"><strong>About this methodology.</strong> The method on this page is an improved version of the one that appeared in the original work. It keeps the original framework and adjusts it so that it can be applied to every HS8 line India imports, across four financial years. It also adds further refinements that bring more nuance to the analysis. For this reason, figures and verdicts on this dashboard may differ from those in the original work.</div>
-      <p>The method works in three layers. The SCV Framework is the theory. A set of measures puts the framework to work on trade data, in order: dependence; the Relative Impact Factor for scale; China's share of world exports and of world output, and India's imports from China as a share of non-China exports, and China's share of world output, for substitutability; and the Product Complexity Index and the number of competitive exporters for the capability gap. A final Human Examination covers what numbers cannot show.</p>` },
+      <p>The method works in three layers. The SCV Framework supplies the theory, a set of measures puts it to work on trade data, and a Human Examination covers what the numbers cannot show. The measures are applied one step at a time:</p>
+      <ul>
+        <li><strong>Step 1, Dependence:</strong> China's share of India's imports of the item.</li>
+        <li><strong>Step 2, Scale of Disruption:</strong> the Relative Impact Factor (RIF).</li>
+        <li><strong>Steps 3 and 4, Substitutability:</strong> China's share of world exports, India's imports from China as a share of non-China exports, the Product Complexity Index (PCI), and China's share of world output.</li>
+        <li><strong>Step 5, Capability gap and national security:</strong> the PCI and the number of competitive exporters, and whether the item belongs to a national-security sector.</li>
+        <li><strong>Step 6, Human Examination:</strong> a case-by-case review of the shortlisted items.</li>
+      </ul>` },
   { id: 'scv', g: 'The method', t: 'The SCV Framework', s: 'The SCV Framework', h: () => `
       <p>The Strategic and Critical Vulnerability (SCV) framework is the backdrop for everything else on this page. It sets out when a dependence on another country becomes a Strategic Vulnerability, and when that vulnerability is critical. The framework is theoretical. The rest of the method finds a way to put it to work on trade data.</p>
       <p>The same framework, told as a series of questions with examples, is in the <a href="#methodology?s=story">story map</a>.</p>
@@ -2923,8 +2941,8 @@ const METH = [
       <p>Some tests are easy to administer. The Adversary Test is settled by the choice of country. The others are harder. Testing substitutability properly means mapping alternative suppliers and their capacity. Testing incidence means comparing imports with the whole domestic market. Testing the cascading effect means weighing value added and jobs along the supply chain. That data is not public for every HS8 line.</p>
       <p>The Observatory therefore uses measures that stand in for the tests, and then adds a Human Examination for what is left. Where a test has more than one measure, any one of them is enough. Substitutability follows one rule: an item goes forward if alternatives are not enough and its PCI is 1 or more, or if China's share of world output is greater than 50%.</p>
       <div class="scroll-x keytable"><table class="data defs"><thead><tr><th>SCV test</th><th>Measured by</th><th>Left to judgement</th></tr></thead><tbody>
-        <tr><td><strong>Adversary</strong></td><td>Passed by default: the study is of imports from China</td><td>Whether China would act</td></tr>
-        <tr><td><strong>Dependence Filter</strong><br><span class="cap">Not a test in itself</span></td><td>China's share of India's imports of the item (30% or more)</td><td>Sets aside items where India already buys most of its supply elsewhere</td></tr>
+        <tr><td><strong>Adversary</strong></td><td>All items pass by default, since the imports are assessed against China</td><td>Whether China would act</td></tr>
+        <tr><td><strong>Dependence Filter</strong></td><td>China's share of India's imports of the item (30% or more)</td><td>Sets aside items where India already buys most of its supply elsewhere</td></tr>
         <tr><td><strong>Incidence and cascading</strong></td><td>Relative Impact Factor, RIF (0.01 or more), with a tag for the channel: incidence for consumer goods, cascading for inputs and equipment</td><td>Population affected, the product's utility, and links along the supply chain</td></tr>
         <tr><td><strong>Substitutability</strong></td><td>Fails if alternatives are not enough (China's share of world exports greater than 30%, or India's imports from China greater than 5% of non-China exports) and the PCI is 1 or more; or if China's share of world output is greater than 50%</td><td>Switching cost, and whether other suppliers are willing to supply India</td></tr>
         <tr><td><strong>Capability gap</strong></td><td>Either of two: PCI of 1.75 or more; five or fewer competitive exporters (not applied to consumer goods)</td><td>Whether China truly holds the lead</td></tr>
@@ -2933,8 +2951,8 @@ const METH = [
       ${(() => { const Pp = ITEMS.filter(i => R(i).cat !== 'below'), cap = i => (i.pci != null && i.pci >= TH3.PCI_CRIT) || (i.ubq != null && i.ubq <= TH3.UBQ && i.eu !== 'C');
         const nA = Pp.filter(i => R(i).cat !== 'alt' && !cap(i)).length, nB = Pp.filter(i => R(i).cat === 'alt' && cap(i)).length;
         return `<h2>Why substitutability and capability are separate tests</h2>
-      <p>The two tests can look alike, because both ask whether India could get the product from someone other than China. They ask it over different horizons. Substitutability asks whether existing suppliers could replace China in the short to medium term, at a reasonable switching cost. If imports from China could be replaced quickly, the dependence is not much of a Strategic Vulnerability. The capability gap asks whether anyone could match China's lead even with time, by building new capacity and know-how. It marks the more severe, critical form of vulnerability, where the gap is so large that replacing China would likely be much more difficult, possibly for years. The SCV Framework's example runs the other way: the equipment used to print chips (photolithography), where Western firms hold a lead that China would likely need many years to close. For China, that dependence is a Critical Vulnerability.</p>
-      <p>An item can fail one test and pass the other. Chopsticks or umbrella frames come mostly from China, so they go forward at Step 3 of the Substitutability Test, but their PCI is low, which suggests any country could make them, so the second part of the Substitutability Test sets them aside and there is no capability gap. Some pharmaceutical intermediates are made competitively by only a few countries, a capability gap, but those countries are not China, so alternatives exist.</p>
+      <p>The two tests can look alike, since both ask whether India could buy the product from someone other than China, but they look over different time horizons. Substitutability asks whether existing suppliers could step in for China in the short to medium term, at a reasonable switching cost; if they could, the dependence is unlikely to be a Strategic Vulnerability. The capability gap looks further ahead and asks whether anyone could match China's lead even with time to build new capacity and know-how. Where the gap is that wide, replacing China would likely take years, which is why the framework treats it as the more severe, critical form of vulnerability. The SCV Framework illustrates this with an example that runs the other way: China relies on Western firms for the equipment used to print chips (photolithography), a lead it would likely need many years to close, and that makes the dependence a Critical Vulnerability for China.</p>
+      <p>An item can fail one test and pass the other. Chopsticks or umbrella frames come mostly from China, so they go forward at Step 3 of the Substitutability Test. Their PCI is low, however, which suggests that many countries could make them, so Step 4 of the Substitutability Test, the PCI check, sets them aside, and there is no capability gap. Some pharmaceutical intermediates are made competitively by only a few countries, a capability gap, but those countries are not China, so alternatives exist.</p>
       <p>In the data, the measures overlap. PCI and the count of competitive exporters are built from who exports what, as substitutability is. The two tests still sort items differently. Of the ${int(Pp.length)} items that pass dependence and scale in ${FY[S.year]}, ${int(nA)} have limited alternatives but no capability gap, and ${int(nB)} have a capability gap but alternatives exist. A disruption lasts as long as the faster of the two routes to new supply takes: existing suppliers expanding, or new capacity being built. That is why the two tests are read together.</p>`; })()}
       <div class="flow">
         <div><div class="k">Part 1 · Quantitative</div><h3>Step 1: Dependence</h3><p>Items where China supplies 30% or less of India's imports are set aside.</p></div>
@@ -2944,10 +2962,10 @@ const METH = [
         <div><div class="k">Part 1 · Quantitative</div><h3>Step 5: Capability gap and national security</h3><p>Passing the Capability Gap Test or the National Security Test makes an item critical. The rest are strategic.</p></div>
         <div><div class="k">Part 2 · Qualitative</div><h3>Step 6: Human Examination</h3><p>Each shortlisted item is examined for what the numbers cannot show.</p></div>
       </div>
-      <p>The verdicts on this dashboard come from Steps 1 to 5. They show which items need attention first under Step 6. Scale comes first. Substitutability and capability follow together, because between them they decide whether, and how quickly, supply could be replaced. The SCV Framework lists the Incidence and Cascading Tests after substitutability. The order of measurement differs, but an item must pass every gate, so the order does not change which items pass; it changes only where items are set aside. <a href="#methodology?s=gates">See every gate on one page</a>. The items that pass are potential Strategic or Critical Vulnerabilities until the Human Examination confirms or rejects them.</p>` },
+      <p>The verdicts on this dashboard come from Steps 1 to 5, and the items that pass remain potential Strategic or Critical Vulnerabilities until the Human Examination in Step 6 confirms or rejects them. The SCV Framework lists the Incidence and Cascading Tests after substitutability, while the method measures scale first; since an item must pass every step either way, the order changes only where items are set aside, not which items pass. <a href="#methodology?s=gates">See every gate on one page</a>.</p>` },
   { id: 'gates', g: 'The method', t: 'Every gate at a glance', s: 'Every gate at a glance', h: () => gatesHTML(S.year) },
   { id: 'dependence', g: 'The method', t: 'Step 1: Dependence and the Adversary Test', s: 'Step 1: Dependence', h: () => `
-      <p>The Adversary Test is passed by default. The Observatory studies imports from China, which it treats as an adversary, so no item is tested on that count. The Dependence Filter is a separate step.</p>
+      <p>Given that the imports are being assessed against China, all items pass the Adversary Test by default.</p>
       <p>Dependence (D) is the share of India's imports of a line that comes from China.</p>
       <p>The filter is set at 30%. China makes about 30% of the world's manufactured goods, by volume and by value. If India's purchases of an item followed China's weight in world production, about 30% would come from China. A share above 30% means India leans on China more than that weight explains. Below 30%, India already buys most of the item elsewhere, so its supply is treated as diversified. For comparison, India's Competition Act treats a market share above 40% as dominant. Lines below 30% are set aside.</p>
       <p>Lines at 30% or above are graded in equal steps of 20 percentage points.</p>
@@ -2976,7 +2994,7 @@ const METH = [
       <ul>
         <li><strong>Incidence:</strong> consumer goods. A cut-off reaches households directly.</li>
         <li><strong>Cascading:</strong> intermediate goods and capital goods. A cut-off spreads to the industries that use them, and from there to workers and consumers.</li>
-        <li><strong>Both:</strong> the few dual-use goods the classification leaves open.</li>
+        <li><strong>Not specified:</strong> a handful of products for which the UN classification gives no single end use, such as combined refrigerator-freezers and LED modules.</li>
       </ul>
       <p>Nearly all of India's strategic and critical items are inputs or equipment, so its exposure to China runs mainly through cascading. The tag is a label and does not change any verdict. Where a product has several uses, the tag follows the United Nations' assignment of its main use.</p>
       <p class="cap">Based on Kumar (2025), Table 2. End use: UN Statistics Division, HS 2022 to BEC Rev. 5 correspondence.</p>` },
@@ -3025,13 +3043,12 @@ const METH = [
         <li><strong>The costs are not equal.</strong> Setting an item aside wrongly removes a real vulnerability from view. Letting an item go forward unnecessarily costs a Human Examination in the last step, which is built to deal with it.</li>
         <li><strong>The next step can correct the line.</strong> Items that go forward are still tested for complexity, and every vulnerable item is examined case by case.</li>
       </ul>
-      <p>The table shows what the choice does, for FY 2025-26 (the figures move a little with the data).</p>
-      <div class="scroll-x keytable"><table class="data"><thead><tr><th>Line</th><th>An item is set aside if</th><th class="n">Products that grew this much in a year</th><th class="n">Items going forward</th><th class="n">Strategic and critical</th></tr></thead><tbody>
-        <tr><td><strong>5% (used)</strong></td><td>a good year of expansion would cover it</td><td class="n">27%</td><td class="n">1,211</td><td class="n">234</td></tr>
-        <tr><td>10%</td><td>a strong year would cover it</td><td class="n">17%</td><td class="n">1,120</td><td class="n">201</td></tr>
-        <tr><td>20%</td><td>an exceptional year would cover it</td><td class="n">9%</td><td class="n">1,099</td><td class="n">194</td></tr>
+      ${(() => { const T = cvLineStats(S.year), g = { 5: '27%', 10: '17%', 20: '9%' }, why = { 5: 'a good year of expansion would cover it', 10: 'a strong year would cover it', 20: 'an exceptional year would cover it' };
+        return `<p>The table shows what the choice does, for ${FY[S.year]}.</p>
+      <div class="scroll-x keytable"><table class="data cvt"><colgroup><col style="width:14%"><col style="width:38%"><col style="width:16%"><col style="width:16%"><col style="width:16%"></colgroup><thead><tr><th>Line</th><th>An item is set aside if</th><th class="n">Products that grew this much in a year</th><th class="n">Items going forward</th><th class="n">Strategic and Critical</th></tr></thead><tbody>
+        ${[5, 10, 20].map(l => `<tr><td>${l === 5 ? '<strong>5% (used)</strong>' : l + '%'}</td><td>${why[l]}</td><td class="n">${g[l]}</td><td class="n">${int(T[l].fwd)}</td><td class="n">${int(T[l].sc)}</td></tr>`).join('')}
       </tbody></table></div>
-      <p>Moving from 5% to 10% sets aside 91 more items, and 33 fewer end up strategic or critical. The distribution of this measure has no natural break, so the line is a judgment. It is a reasoned first value, not a measured constant, and the Explorer lets you test others.</p>
+      <p>Moving from 5% to 10% sets aside ${int(T[5].fwd - T[10].fwd)} more items, and ${int(T[5].sc - T[10].sc)} fewer end up strategic or critical.`; })()} The distribution of this measure has no natural break, so the line is a judgment. It is a reasoned first value, not a measured constant, and the Explorer lets you test others.</p>
       <p><strong>What the evidence cannot show.</strong> It rests on two annual changes, both in a weak period for world trade, and product-level figures are noisy. Growth in exports is also not spare capacity: it shows what exporters did sell, not what they could have sold. It is a guide to what expansion is realistic, not a forecast of what a country would supply to India.</p>
       <p>This is demonstrated export capacity: what other countries actually export. It is not spare capacity. A low number shows that other countries sell a lot of the product. It does not show that they have room to sell more to India.</p>
       <h2>Other exporters</h2>
@@ -3246,10 +3263,16 @@ function gatesHTML(y) {
   const vul = n(replV) + n(easyV) + n(smallV), depN = smallD + (n(repl) - n(replV)) + (n(easy) - n(easyV)), oth = n(b30) + n(na);
   const years = `<div class="seg years" role="group" aria-label="Financial year">${YEARS.map(k => `<button type="button" data-year="${k}" aria-pressed="${k === y}">${FY[k]}</button>`).join('')}</div>`;
   return `
-    <p>This chart shows the whole method at once. Every HS8 item India imports from China passes through the same gates, in the order of the <a href="#methodology?s=scv">SCV Framework</a>, and each gate has a measured cut-off. An item that fails a gate leaves the flow there and takes the grade shown beside it. An item that passes goes on to the next gate. Select a number to see those items in the Explorer.</p>
-    <p>The framework asks these questions as matters of judgement. Here each is answered with a measure and a threshold, and a <a href="#methodology?s=human">Human Examination</a> then looks at what the numbers cannot show. The Substitutability Test follows one rule:</p>
+    <p>The chart follows every item India imports from China through the method, with the counts for the year selected. At each gate, the items that fail leave the flow and take the grade shown beside them, while the rest go on to the next gate. Select a number to see those items in the Explorer.</p>
+    <p>The Substitutability Test follows one rule:</p>
     <p class="formula">[ (China's share of world exports &gt; 30% <b>OR</b> India's imports from China &gt; 5% of non-China exports) <b>AND</b> PCI ≥ 1 ] <b>OR</b> China's share of world output &gt; 50%</p>
-    <p>The chart applies this rule in two steps that give exactly the same result. Step 3 checks the two trade measures and Step 4 the PCI. China's share of world output appears at both, because it is one route through the whole test, not a check made twice: where it is greater than 50%, China makes more than the rest of the world combined, so the item fails the test on that ground alone and passes straight through both steps. As in the framework, a Critical Vulnerability is a Strategic Vulnerability that also passes the Capability Gap Test or the National Security Test, so both come after substitutability.</p>
+    <p>The chart applies this rule in two steps, which give exactly the same result:</p>
+    <ul>
+      <li><strong>Step 3 (gate 4)</strong> checks whether existing alternatives are not enough: China's share of world exports is greater than 30%, or India's imports from China are greater than 5% of non-China exports.</li>
+      <li><strong>Step 4 (gate 5)</strong> checks whether the PCI is 1 or more.</li>
+      <li><strong>China's share of world output greater than 50%</strong> appears at both steps because it is a single route through the whole test, not a check made twice. Where China makes more than the rest of the world combined, the item fails the test on that ground alone and passes straight through both steps.</li>
+    </ul>
+    <p>As in the framework, a Critical Vulnerability is a Strategic Vulnerability that also passes the Capability Gap Test or the National Security Test, so gate 6 comes after substitutability.</p>
     <div class="gx">
       <div class="gx-top"><p class="gx-yr">Counts for ${FY[y]}</p>${years}</div>
       <div class="gx-start"><b>${int(ITEMS.filter(i => i.y[y].t > 0).length)}</b> HS8 lines in India's import data for ${FY[y]}</div>
@@ -3512,6 +3535,7 @@ PAGES.methodology = (app, side) => {
       ${sec.h()}
       ${pnHTML(i > 0 ? methLink(METH[i - 1]) : null, i < METH.length - 1 ? methLink(METH[i + 1]) : null)}
     </article>`;
+  alignTables(app);
   if (sec.id === 'story') bindStory(app);
   const cf = $('#cf');
   if (cf) {
@@ -3537,18 +3561,18 @@ PAGES.methodology = (app, side) => {
 const ABOUT_GO = [{ id: 'about', label: 'About this Observatory', href: '#about' }, { id: 'author', label: 'About the author', href: '#author' }];
 PAGES.about = (app, side) => {
   side.innerHTML = sideLinks('About', ABOUT_GO, 'about') + sideSelect([['About', ABOUT_GO]], 'about');
-  // Vulnerabilities is the Observatory's own concern, so it opens first; the other two sit in the backdrop
+  // Vulnerabilities is the Observatory's own concern, so it comes first and opens first; the other two sit in the backdrop
   const strands = [
-    { id: 'imbalance', n: 1, t: 'Trade imbalance', tag: 'Not covered here',
+    { id: 'vulnerabilities', n: 1, t: 'Vulnerabilities', tag: 'This Observatory', here: true,
+      lead: "The objective of this Observatory is to address the Strategic Vulnerabilities that arise from India's import dependence on China. It does not address the problems arising out of trade imbalance or dumping. Instead, it maps India's dependence on China item by item to identify which of those cases are potential vulnerabilities, and further, which among them are strategic and critical in nature, so that a nuanced de-risking strategy can be crafted.",
+      c: "Import dependence, which is a product of the logic of comparative advantage, is not inherently harmful. Dependence becomes a vulnerability only when it is severe and exposed to disruptive factors like supply shocks, trade barriers, or information asymmetries. Even then, not all vulnerabilities are strategic. De-risking should be selective and cost-conscious.",
+      w: ["Stockpiling with limited diversification for organic chemicals.", "Capturing low-end value-chain segments, such as parts and spares, in electronics.", "Deregulation, to make India a more attractive destination for the China plus one strategy.", "No state intervention for items that are not strategic. These are an opportunity for private enterprises, which are encouraged to step in and capitalise on them."] },
+    { id: 'imbalance', n: 2, t: 'Trade imbalance', tag: 'Not covered here',
       c: "Imbalanced trade and huge asymmetry have become characteristic of India-China goods trade. In FY 2025, India imported US$ 113 billion worth of goods from China, but exported goods worth only US$ 14 billion. This asymmetry isn't a function of India's ever-increasing imports from China, as much as it is a result of India's stagnant exports to China. Thus, the remedy lies in identifying the factors that have prevented India from scaling its exports to China.",
       w: ["Regularise government-to-government, business-to-business and government-to-business dialogue, to understand the Chinese market and align expectations and quality standards.", "Study the complementarities between Indian exports and Chinese imports on a continuous basis, and boost services exports.", "Raise India's overall export capability."] },
-    { id: 'dumping', n: 2, t: 'Dumping', tag: 'Not covered here',
+    { id: 'dumping', n: 3, t: 'Dumping', tag: 'Not covered here',
       c: "China engages in suppressed interest rates, currency devaluation, extensive subsidies and tax rebates to keep its exports artificially competitive. As a result, concerns around unfair competition and de-industrialisation are legitimate. However, a blanket ban on Chinese imports is neither prudent nor effective. An optimal strategy should be to restore fair competition rather than eliminate trade.",
       w: ["Use calibrated anti-dumping and countervailing duties.", "Keep them proportionate: a duty roughly equal to the value of unfair subsidies.", "Use them where India already has significant manufacturing strength."] },
-    { id: 'vulnerabilities', n: 3, t: 'Vulnerabilities', tag: 'This Observatory', here: true,
-      lead: "The objective of this Observatory is to address the third problem underlying the India-China trade. It does not address the problems arising out of trade imbalance or dumping. Instead, it maps India's dependence on China item by item and asks which dependences are vulnerabilities, which are strategic, and which are critical, so that de-risking can be selective.",
-      c: "Import dependence, which is a product of the logic of comparative advantage, is not inherently harmful. Dependence becomes a vulnerability only when it is severe and exposed to disruptive factors like supply shocks, trade barriers, or information asymmetries. Even then, not all vulnerabilities are strategic. De-risking should be selective and cost-conscious.",
-      w: ["Stockpiling with limited diversification for organic chemicals.", "Capturing low-end value-chain segments, such as parts and spares, in electronics.", "Deregulation, to make India a more attractive destination for the China plus one strategy.", "No state intervention for items that are not strategic."] },
   ];
   const want = new URLSearchParams(location.hash.split('?')[1] || '').get('c');
   const first = strands.some(x => x.id === want) ? want : 'vulnerabilities';
@@ -3560,7 +3584,7 @@ PAGES.about = (app, side) => {
   app.innerHTML = `<article class="prose sec-page about">
       <p class="kicker">About</p>
       <h1>About this Observatory</h1>
-      <p class="lede">India's concerns vis-à-vis China in bilateral trade are three-fold: trade imbalance, dumping and import dependence-induced Strategic Vulnerabilities. Each of these three issues is distinct in nature, thereby demanding a specific approach.</p>
+      <p class="lede">India's concerns vis-à-vis China in bilateral trade are three-fold: import dependence-induced Strategic Vulnerabilities, trade imbalance and dumping. Each of these three issues is distinct in nature, thereby demanding a specific approach.</p>
       <div class="ab-tabs" role="tablist" aria-label="The three concerns">${tabs}</div>
       ${panels}
       <h2>Why India can let China subsidise its development where it can</h2>
@@ -3585,6 +3609,19 @@ PAGES.about = (app, side) => {
   });
 };
 
+// Table alignment: the first column and sentence columns left; numbers, ranges and one- or two-word terms centred, header included
+function alignTables(root) {
+  const short = td => { const t = td.textContent.trim(); if (!t || td.classList.contains('n')) return true;
+    const w = t.split(/\s+/), words = w.filter(x => /[A-Za-z]/.test(x));
+    return /^[^A-Za-z]*\d/.test(t) ? words.length <= 2 && w.length <= 5 : words.length <= 2 && t.length <= 26; };
+  root.querySelectorAll('table.data').forEach(t => {
+    const rows = [...(t.tBodies[0]?.rows || [])]; if (!rows.length || rows.some(r => [...r.cells].some(c => c.colSpan > 1 || c.rowSpan > 1))) return;
+    const n = Math.max(...rows.map(r => r.cells.length)), head = t.tHead?.rows[0];
+    for (let c = 1; c < n; c++) { const cells = rows.map(r => r.cells[c]).filter(Boolean); if (!cells.length) continue;
+      const al = cells.every(short) ? 'center' : 'left';
+      cells.forEach(td => { td.style.textAlign = al; }); if (head?.cells[c]) { head.cells[c].style.textAlign = al; if (al === 'center') head.cells[c].style.whiteSpace = 'normal'; } }
+  });
+}
 /* ---------- About the author ---------- */
 PAGES.author = (app, side) => {
   side.innerHTML = sideLinks('About', ABOUT_GO, 'author') + sideSelect([['About', ABOUT_GO]], 'author');
@@ -3714,7 +3751,7 @@ function stepsHTML(i) {
   const steps = [
     ['Adversary', ok, 'China, passed by default'],
     ['Dependence', r.d >= TH.D_MIN ? ok : no, `${pct(r.d)} of India's imports come from China (line: 30%)`],
-    ['Scale', r.d < TH.D_MIN ? nr : r.rif >= TH.RIF_MIN ? ok : no, `RIF ${rifFmt(r.rif)}, ${RIFNAME[r.rc]}${i.eu ? `. Channel: ${CHAN_L[i.eu]} (${({ I: 'input to production', K: 'equipment', C: 'consumer good', D: 'dual use' })[i.eu]})` : ''}`],
+    ['Scale', r.d < TH.D_MIN ? nr : r.rif >= TH.RIF_MIN ? ok : no, `RIF ${rifFmt(r.rif)}, ${RIFNAME[r.rc]}${i.eu ? `. Channel: ${CHAN_L[i.eu]} (${({ I: 'input to production', K: 'equipment', C: 'consumer good', D: 'no single end use' })[i.eu]})` : ''}`],
     ['Substitutability: alternatives', r.d < TH.D_MIN ? nr : r.pdom ? '<span class="st-ok">China dominates production</span>' : r.alt ? '<span class="st-no">Alternatives exist</span>' : '<span class="st-ok">Alternatives not enough</span>',
       `China's export share ${i.sw != null ? pct(i.sw) : 'n/a'}${i.prod != null ? `; China's share of world output ${pct(i.prod)}${pd ? ` (${esc(pd.stage)}, ${esc(pd.source)})` : ''}` : ''}; India's imports from China are ${i.cv == null ? 'n/a' : coverOf(i.cv).x} of non-China exports.${fwd && why.length ? ` Goes forward because ${why.join(', and ')}.` : ''}`],
     ['Substitutability: PCI', !fwd ? nr : mk ? ok : r.cat === 'na' ? '<span class="st-no">Not assessed</span>' : '<span class="st-no">PCI below 1</span>',
