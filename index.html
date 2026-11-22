@@ -1256,25 +1256,27 @@ table.matrix th.corner .cx-s { text-align: left; }
 }
 /* Explorer table headings sit in the vertical middle of the heading row */
 #exTable table.data thead th { vertical-align: middle; }
-/* Explorer table: at 1240px and wider all nine columns have their own width; below that every row becomes a labelled card */
-@media (min-width: 1240px) {
+/* Explorer table: at 1360px and wider all nine columns have their own width and Commodity keeps room to read; below that every row becomes a labelled card */
+@media (min-width: 1360px) {
   #exTable table.data { table-layout: fixed; width: 100%; }
   #exTable table.data th, #exTable table.data td { padding-left: 7px; padding-right: 7px; }
-  #exTable table.data th:nth-child(1) { width: 78px; }
-  #exTable table.data th:nth-child(3) { width: 76px; }
-  #exTable table.data th:nth-child(4) { width: 94px; }
-  #exTable table.data th:nth-child(5) { width: 112px; }
-  #exTable table.data th:nth-child(6) { width: 86px; }
-  #exTable table.data th:nth-child(7) { width: 88px; }
-  #exTable table.data th:nth-child(8) { width: 70px; }
-  #exTable table.data th:nth-child(9) { width: 88px; }
+  /* Widths follow the column, not its position, so reordering columns cannot squeeze a heading */
+  #exTable table.data th.c-hs8 { width: 78px; }
+  #exTable table.data th.c-china { width: 78px; }
+  #exTable table.data th.c-total { width: 78px; }
+  #exTable table.data th.c-d { width: 116px; }
+  #exTable table.data th.c-rif { width: 86px; }
+  #exTable table.data th.c-alt { width: 90px; }
+  #exTable table.data th.c-cover { width: 92px; }
+  #exTable table.data th.c-pci { width: 70px; }
+  #exTable table.data th.c-ubq { width: 104px; }
   #exTable .dbar { width: 44px; }
   #exTable table.data .badge { white-space: normal; max-width: 100%; }
   #exTable table.data td { overflow-wrap: anywhere; }
   #exTable table.data .tags { white-space: normal; }
   #exTable table.data thead th { white-space: normal; letter-spacing: 0.03em; overflow-wrap: normal; }
 }
-@media (min-width: 641px) and (max-width: 1239px) {
+@media (min-width: 641px) and (max-width: 1359px) {
   #exTable table.data.rows thead { display: none; }
   #exTable table.data.rows, #exTable table.data.rows tbody { display: block; width: 100%; }
   #exTable table.data.rows tr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 14px; padding: 12px 10px 12px 12px; border-bottom: 1px solid var(--ink-10); }
@@ -1901,7 +1903,7 @@ function tableHTML(list, keys, { y = S.year, sortable = false, sort, dir, banded
     const c = COLS[k];
     const arr = !sortable ? '' : sort === k ? `<span class="arr">${dir < 0 ? '↓' : '↑'}</span>` : '<span class="arr idle">⇅</span>';
     const on = sortable && sort === k;
-    return `<th class="${c.n ? 'n' : ''} ${sortable ? 'sortable' : ''} ${on ? 'on' : ''}" data-sort="${k}"${sortable ? ` ${HEADPOP[k] ? `data-hp="${k}"` : `title="${esc(c.tip || 'Sort by ' + c.h)}"`} aria-sort="${on ? (dir < 0 ? 'descending' : 'ascending') : 'none'}"` : ''}>${c.hh || c.h}${arr}${c.hs ? `<span class="th-sub">${c.hs}</span>` : ''}</th>`;
+    return `<th class="c-${k} ${c.n ? 'n' : ''} ${sortable ? 'sortable' : ''} ${on ? 'on' : ''}" data-sort="${k}"${sortable ? ` ${HEADPOP[k] ? `data-hp="${k}"` : `title="${esc(c.tip || 'Sort by ' + c.h)}"`} aria-sort="${on ? (dir < 0 ? 'descending' : 'ascending') : 'none'}"` : ''}>${c.hh || c.h}${arr}${c.hs ? `<span class="th-sub">${c.hs}</span>` : ''}</th>`;
   }).join('');
   const body = list.map(i => {
     const r = R(i, y);
